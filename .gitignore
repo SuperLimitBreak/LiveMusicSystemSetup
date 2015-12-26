@@ -1,0 +1,8 @@
+*.pyc
+.DS_Store
+
+libs/
+displayTrigger/
+lightingAutomation/
+pentatonicHero/
+voteBattle/

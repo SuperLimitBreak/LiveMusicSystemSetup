@@ -13,7 +13,8 @@ Setup should be (idealy) completly automated.
   * One large display
 * Install WAP
   * DNS
-    * All map to this ip
+    * known computers could be given known names 'server', 'projector', 'cuebase', 'synth'
+    * All unknown names map to server's ip
   * DCHP
     * Known MAC address's -> ip's
     * Differnt subnet for wireless devices?
