@@ -25,7 +25,7 @@ libs:
 
 displayTrigger:
 	git clone https://github.com/SuperLimitBreak/displayTrigger.git
-	cd displayTrigger; make install
+	cd displayTrigger/server; make install
 
 lightingAutomation:
 	git clone https://github.com/SuperLimitBreak/lightingAutomation.git
@@ -33,7 +33,7 @@ lightingAutomation:
 
 voteBattle:
 	git clone https://github.com/SuperLimitBreak/voteBattle.git
-	cd voteBattle; make install
+	cd voteBattle/server; make install
 
 pentatonicHero:
 	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
@@ -65,7 +65,7 @@ pull: clone
 # Build ------------------------------------------------------------------------
 
 requirements.pip:
-	cat $(find . -name requirements.pip) > requirements.pip
+	cat $$(find . -name requirements.pip) > requirements.pip
 
 .PHONY: build
 build: requirements.pip
