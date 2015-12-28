@@ -15,13 +15,16 @@ help:
 install: clone services build
 
 .PHONY: clone
-clone: libs displayTrigger lightingAutomation voteBattle pentatonicHero
+clone: libs pentatonicHero displayTrigger lightingAutomation voteBattle
 
 
 # Repos ------------------------------------------------------------------------
 
 libs:
 	git clone https://github.com/calaldees/libs.git
+
+pentatonicHero:
+	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
 
 displayTrigger:
 	git clone https://github.com/SuperLimitBreak/displayTrigger.git
@@ -34,9 +37,6 @@ lightingAutomation:
 voteBattle:
 	git clone https://github.com/SuperLimitBreak/voteBattle.git
 	cd voteBattle/server; make install
-
-pentatonicHero:
-	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
 
 
 # Sytemd services --------------------------------------------------------------
@@ -56,10 +56,10 @@ $(SERVICE_PATH)%.service:
 .PHONY: pull
 pull: clone
 	cd libs              ; git pull
+	cd pentatonicHero    ; git pull
 	cd displayTrigger    ; git pull
 	cd lightingAutomation; git pull
 	cd voteBattle        ; git pull
-	cd pentatonicHero    ; git pull
 
 
 # Build ------------------------------------------------------------------------
@@ -69,6 +69,8 @@ requirements.pip:
 
 .PHONY: build
 build: requirements.pip
+	pip3 install --upgrade pip
+	pip3 install -r requirements.pip
 	#docker build -t python --file python.Dockerfile .
 	#TODO: docker run with names?
 	# Unsure if docker is the correct tool.

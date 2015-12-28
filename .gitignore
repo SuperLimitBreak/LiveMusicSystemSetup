@@ -1,6 +1,7 @@
 *.pyc
 .DS_Store
 
+requirements.pip
 libs/
 displayTrigger/
 lightingAutomation/
