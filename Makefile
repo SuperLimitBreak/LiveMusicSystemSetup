@@ -1,3 +1,4 @@
+SERVICE_PATH=~/.config/systemd/user/
 
 .PHONY: help
 help:
@@ -11,7 +12,7 @@ help:
 # Install ----------------------------------------------------------------------
 
 .PHONY: install
-install: clone build
+install: clone services build
 
 .PHONY: clone
 clone: libs displayTrigger lightingAutomation voteBattle pentatonicHero
@@ -38,6 +39,18 @@ pentatonicHero:
 	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
 
 
+# Sytemd services --------------------------------------------------------------
+
+.PHONY: services
+services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service
+	if [ -z systemctl ] ; then \
+		systemctl --user daemon-reload ;\
+	fi
+
+$(SERVICE_PATH)%.service:
+	mkdir -p $(SERVICE_PATH)
+	cp $*.service $(SERVICE_PATH)
+
 # Pull Updates -----------------------------------------------------------------
 
 .PHONY: pull
@@ -56,7 +69,7 @@ requirements.pip:
 
 .PHONY: build
 build: requirements.pip
-	docker build -t python --file python.Dockerfile .
+	#docker build -t python --file python.Dockerfile .
 	#TODO: docker run with names?
 	# Unsure if docker is the correct tool.
 	# Consider local machine with systemd or docker contaner with systemd
@@ -65,9 +78,10 @@ build: requirements.pip
 
 # Run --------------------------------------------------------------------------
 
-.PHONY: up
-up:
-	docker-compose up
+.PHONY: start
+start:
+	#docker-compose up
+	
 
 
 # Clean ------------------------------------------------------------------------
@@ -75,3 +89,6 @@ up:
 .PHONY: clean
 clean:
 	rm -rf libs displayTrigger lightingAutomation voteBattle pentatonicHero
+	for SERVICE in displayTrigger lightingAutomation voteBattle ; do \
+		rm -rf $(SERVICE_PATH)$$SERVICE.service ;\
+	done
