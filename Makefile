@@ -50,6 +50,7 @@ services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomatio
 $(SERVICE_PATH)%.service:
 	mkdir -p $(SERVICE_PATH)
 	cp $*.service $(SERVICE_PATH)
+	#printf "\nHi\nthis_PATH\nYep" > test.txt  && p=$(pwd|sed 's/\//\\\//g') && echo $p && echo $p && sed -i.bak "s/PATH/${p}/g" test.txt && cat test.txt
 
 
 # Pull Updates -----------------------------------------------------------------
