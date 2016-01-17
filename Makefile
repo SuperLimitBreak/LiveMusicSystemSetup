@@ -43,13 +43,14 @@ voteBattle:
 
 .PHONY: services
 services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service
-	if [ -z systemctl ] ; then \
+	if [ hash systemctl 2>/dev/null ] ; then \
 		systemctl --user daemon-reload ;\
 	fi
 
 $(SERVICE_PATH)%.service:
 	mkdir -p $(SERVICE_PATH)
 	cp $*.service $(SERVICE_PATH)
+
 
 # Pull Updates -----------------------------------------------------------------
 
@@ -83,7 +84,6 @@ build: requirements.pip
 .PHONY: start
 start:
 	#docker-compose up
-	
 
 
 # Clean ------------------------------------------------------------------------
