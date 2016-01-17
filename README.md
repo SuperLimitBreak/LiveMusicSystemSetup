@@ -1,12 +1,40 @@
-# LiveMusicSystemSetup
+LiveMusicSystemSetup
+====================
 
 Documentation to setup live music central projection system.
 
-A repo to collect scripts to setup the live music battlefortress of tech.
+A collection of scripts to setup the SuperLimtBreak tech stack for a live performance.
+
+This sets up the main projection machine to boot with the following services:
+
+* displayTrigger
+    * server: A central core bus system to route messgages via TCP or Websockets to the correct destination
+    * python client: A system to send triggers
+    * projector: html5 client to respond to triggers
+* lightingAutomation
+    * Programatically control beatmatched lighting for songs (triggered by a displayTrigger client)
+    * Provide real time control of lights via displayTrigger bus
+* voteBattle:
+    * Interacive audience participation. Activated via the displayTrigger system
+* Chrome
+    * The html5 displayTrigger client is developed with the featureset of Chrome.
+    * Chrome should be started full screen at system startup and load the html5 client
+
 Setup should be (idealy) completly automated.
 
 
-## TODO
+Running Services Manually
+-------------------------
+
+    cd displayTrigger/server; make run
+    cd voteBattle; make run
+    cd lightingAutomation ; make run
+    
+
+
+
+WIP Notes
+---------
 
 * Graphics Setup
   * Drivers for graphics cards
