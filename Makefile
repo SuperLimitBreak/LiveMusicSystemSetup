@@ -73,24 +73,28 @@ requirements.pip:
 build: requirements.pip
 	pip3 install --upgrade pip
 	pip3 install -r requirements.pip
-	#docker build -t python --file python.Dockerfile .
-	#TODO: docker run with names?
-	# Unsure if docker is the correct tool.
-	# Consider local machine with systemd or docker contaner with systemd
-	# Either way the current plan is to configure systemd services
 
 
 # Run --------------------------------------------------------------------------
 
-.PHONY: start
-start:
-	#docker-compose up
+%.pid:
+	# Unfinished experiment
+	start-stop-daemon --start --pidfile $@ --name $* --make-pidfile --background --exec /usr/bin/make --directory "$(CURDIR)/$*/server/" run_production
+
+.PHONY: 
+start: displayTrigger.pid lightingAutomation.pid voteBattle.pid
+.PHONY: stop
+stop:
+	for PID in $$(ls *.pid) ; do \
+		start-stop-daemon --stop  --pidfile $$PID && rm $$PID ;\
+	done
+	rm -rf *.pid
 
 
 # Clean ------------------------------------------------------------------------
 
 .PHONY: clean
-clean:
+clean: stop
 	rm -rf libs displayTrigger lightingAutomation voteBattle pentatonicHero
 	for SERVICE in displayTrigger lightingAutomation voteBattle ; do \
 		rm -rf $(SERVICE_PATH)$$SERVICE.service ;\
