@@ -1,0 +1,10 @@
+[Unit]
+Description=displayTrigger
+
+[Service]
+WorkingDirectory=PWD/displayTrigger/server
+ExecStart=/usr/bin/make run_production
+Restart=always
+
+[Install]
+WantedBy=default.target

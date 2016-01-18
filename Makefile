@@ -6,7 +6,7 @@ help:
 	#  - install - Install and setup all repos
 	#  - pull    - Update all repos
 	#  - clean   - Delete all repos
-	# (Requires docker/git to be installed)
+	# (Requires git to be installed)
 
 
 # Install ----------------------------------------------------------------------
@@ -50,7 +50,7 @@ services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomatio
 $(SERVICE_PATH)%.service:
 	mkdir -p $(SERVICE_PATH)
 	cp $*.service $(SERVICE_PATH)
-	#printf "\nHi\nthis_PATH\nYep" > test.txt  && p=$(pwd|sed 's/\//\\\//g') && echo $p && echo $p && sed -i.bak "s/PATH/${p}/g" test.txt && cat test.txt
+	PWD=$$(pwd|sed 's/\//\\\//g') && sed -i.bak "s/PWD/$${PWD}/g" $(SERVICE_PATH)$*.service
 
 
 # Pull Updates -----------------------------------------------------------------

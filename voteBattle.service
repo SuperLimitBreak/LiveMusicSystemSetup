@@ -1,0 +1,10 @@
+[Unit]
+Description=voteBattle
+
+[Service]
+WorkingDirectory=PWD/voteBattle/server
+ExecStart=/usr/bin/make run_production
+Restart=always
+
+[Install]
+WantedBy=default.target

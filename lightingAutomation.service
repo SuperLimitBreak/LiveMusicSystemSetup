@@ -1,0 +1,10 @@
+[Unit]
+Description=lightingAutomation
+
+[Service]
+WorkingDirectory=PWD/lightingAutomation
+ExecStart=/usr/bin/make run_production
+Restart=always
+
+[Install]
+WantedBy=default.target
