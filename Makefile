@@ -42,7 +42,7 @@ voteBattle:
 # Sytemd services --------------------------------------------------------------
 
 .PHONY: services
-services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service
+services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service displayTriggerHTML5Client.service
 	if [ hash systemctl 2>/dev/null ] ; then \
 		systemctl --user daemon-reload ;\
 	fi

@@ -27,10 +27,9 @@ Running Services Manually
 -------------------------
 
     cd displayTrigger/server; make run
-    cd voteBattle; make run
     cd lightingAutomation ; make run
-    
-
+    cd voteBattle/server; make run
+    chrome --noerrdialogs --ignore-certificate-errors --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar 'http://localhost:6543/static/projector/projector.html?deviceid=main'
 
 
 WIP Notes
