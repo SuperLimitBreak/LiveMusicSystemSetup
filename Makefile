@@ -12,8 +12,7 @@ help:
 # Install ----------------------------------------------------------------------
 
 .PHONY: install
-install: clone services build
-
+install: clone services
 .PHONY: clone
 clone: libs pentatonicHero displayTrigger lightingAutomation voteBattle
 
@@ -62,17 +61,6 @@ pull: clone
 	cd displayTrigger    ; git pull
 	cd lightingAutomation; git pull
 	cd voteBattle        ; git pull
-
-
-# Build ------------------------------------------------------------------------
-
-requirements.pip:
-	cat $$(find . -name requirements.pip) > requirements.pip
-
-.PHONY: build
-build: requirements.pip
-	pip3 install --upgrade pip
-	pip3 install -r requirements.pip
 
 
 # Run --------------------------------------------------------------------------
