@@ -3,7 +3,8 @@ Description=displayTriggerHTML5Client
 
 [Service]
 WorkingDirectory=~/
-ExecStart=chrome --noerrdialogs --ignore-certificate-errors --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar 'http://localhost:6543/static/projector/projector.html?deviceid=main'
+# Chrome binary filled in externally
+ExecStart=CHROME_BIN --noerrdialogs --ignore-certificate-errors --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar 'http://localhost:6543/static/projector/projector.html?deviceid=main'
 Restart=always
 
 [Install]

@@ -1,4 +1,11 @@
 SERVICE_PATH=~/.config/systemd/user/
+SYSTEM=$(shell uname -s)
+
+ifeq ($(SYSTEM), Linux)
+	CHROME_BIN=google-chrome
+else
+	CHROME_BIN=chrome
+endif
 
 .PHONY: help
 help:
@@ -41,7 +48,7 @@ voteBattle:
 # Sytemd services --------------------------------------------------------------
 
 .PHONY: services
-services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service displayTriggerHTML5Client.service
+services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service $(SERVICE_PATH)displayTriggerHTML5Client.service
 	if [ hash systemctl 2>/dev/null ] ; then \
 		systemctl --user daemon-reload ;\
 	fi
@@ -49,7 +56,7 @@ services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomatio
 $(SERVICE_PATH)%.service:
 	mkdir -p $(SERVICE_PATH)
 	cp $*.service $(SERVICE_PATH)
-	PWD=$$(pwd|sed 's/\//\\\//g') && sed -i.bak "s/PWD/$${PWD}/g" $(SERVICE_PATH)$*.service
+	PWD=$$(pwd|sed 's/\//\\\//g') && sed -i.bak -e "s/PWD/$${PWD}/g" -e "s/CHROME_BIN/${CHROME_BIN}/g" $(SERVICE_PATH)$*.service
 
 
 # Pull Updates -----------------------------------------------------------------
