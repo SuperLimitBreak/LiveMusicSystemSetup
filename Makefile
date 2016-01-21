@@ -1,11 +1,6 @@
 SERVICE_PATH=~/.config/systemd/user/
 SYSTEM=$(shell uname -s)
-
-ifeq ($(SYSTEM), Linux)
-	CHROME_BIN=google-chrome
-else
-	CHROME_BIN=chrome
-endif
+CHROME_BIN=google-chrome
 
 .PHONY: help
 help:
