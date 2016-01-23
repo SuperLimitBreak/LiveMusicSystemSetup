@@ -17,7 +17,7 @@ help:
 install: clone $(SYSTEM)_install
 
 .PHONY: Linux_install
-Linux_install: services
+Linux_install: systemd_services
 
 .PHONY: Darwin_install
 Darwin_install:
@@ -47,18 +47,26 @@ voteBattle:
 	cd voteBattle/server; make install
 
 
-# Sytemd services --------------------------------------------------------------
+# Sytemd services -------------------------------------------------------------
+# Having "AUTO_ENABLE" in the service file will cause make to enable said unit
 
-.PHONY: services
-services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service $(SERVICE_PATH)displayTriggerHTML5Client.service
-	if [ hash systemctl 2>/dev/null ] ; then \
-		systemctl --user daemon-reload ;\
-	fi
+.PHONY: systemd_services
+systemd_services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service $(SERVICE_PATH)displayTriggerHTML5Client.service
+
+systemd_reenable:
+	for SERVICE in *.service;\
+		do systemctl --user reenable $(SERVICE);\
+	done
 
 $(SERVICE_PATH)%.service:
 	mkdir -p $(SERVICE_PATH)
 	cp $*.service $(SERVICE_PATH)
 	PWD=$$(pwd) && sed -i.bak -e "s,PWD,$${PWD},g" -e "s,CHROME_BIN,${CHROME_BIN},g" $(SERVICE_PATH)$*.service
+	if grep "AUTO_ENABLE" $(SERVICE_PATH)$*.service;\
+	then\
+		systemctl --user enable $(SERVICE_PATH)$*.service;\
+    fi
+	systemctl --user daemon-reload;
 
 
 # Pull Updates -----------------------------------------------------------------
@@ -92,8 +100,17 @@ stop:
 # Clean ------------------------------------------------------------------------
 
 .PHONY: clean
-clean: stop
+clean: stop $(SYSTEM)_clean
 	rm -rf libs displayTrigger lightingAutomation voteBattle pentatonicHero
-	for SERVICE in displayTrigger lightingAutomation voteBattle ; do \
-		rm -rf $(SERVICE_PATH)$$SERVICE.service ;\
+
+.PHONY: Linux_clean
+Linux_clean:
+	for SERVICE in *.service; \
+	do \
+		systemctl --user disable $$SERVICE; \
+		rm -rf $(SERVICE_PATH)$$SERVICE*; \
 	done
+	systemctl --user daemon-reload;
+
+.PHONY: Darwin_clean
+Darwin_clean:

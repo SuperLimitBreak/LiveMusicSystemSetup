@@ -1,3 +1,4 @@
+#AUTO_ENABLE
 [Unit]
 Description=displayTrigger
 
@@ -7,4 +8,4 @@ ExecStart=/usr/bin/make run_production
 Restart=always
 
 [Install]
-WantedBy=mutli-user.target
+WantedBy=default.target
