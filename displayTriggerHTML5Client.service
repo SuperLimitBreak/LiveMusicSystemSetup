@@ -1,11 +1,15 @@
 [Unit]
 Description=displayTriggerHTML5Client
+Requires=displayTrigger.service
+After=displayTrigger.service
 
 [Service]
-WorkingDirectory=~/
+# Assumes this service won't be ran until an Xorg is up
+# Could still have issues with Xauthority
+Environment=DISPLAY=:0
 # Chrome binary filled in externally
 ExecStart=CHROME_BIN --noerrdialogs --ignore-certificate-errors --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar 'http://localhost:6543/static/projector/projector.html?deviceid=main'
 Restart=always
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical.target
