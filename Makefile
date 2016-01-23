@@ -1,6 +1,6 @@
 SERVICE_PATH=~/.config/systemd/user/
 SYSTEM=$(shell uname -s)
-CHROME_BIN=google-chrome
+CHROME_BIN=/usr/bin/google-chrome
 
 .PHONY: help
 help:
@@ -14,7 +14,14 @@ help:
 # Install ----------------------------------------------------------------------
 
 .PHONY: install
-install: clone services
+install: clone $(SYSTEM)_install
+
+.PHONY: Linux_install
+Linux_install: services
+
+.PHONY: Darwin_install
+Darwin_install:
+
 .PHONY: clone
 clone: libs pentatonicHero displayTrigger lightingAutomation voteBattle
 
@@ -51,7 +58,7 @@ services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomatio
 $(SERVICE_PATH)%.service:
 	mkdir -p $(SERVICE_PATH)
 	cp $*.service $(SERVICE_PATH)
-	PWD=$$(pwd|sed 's/\//\\\//g') && sed -i.bak -e "s/PWD/$${PWD}/g" -e "s/CHROME_BIN/${CHROME_BIN}/g" $(SERVICE_PATH)$*.service
+	PWD=$$(pwd) && sed -i.bak -e "s,PWD,$${PWD},g" -e "s,CHROME_BIN,${CHROME_BIN},g" $(SERVICE_PATH)$*.service
 
 
 # Pull Updates -----------------------------------------------------------------
@@ -71,8 +78,9 @@ pull: clone
 	# Unfinished experiment
 	start-stop-daemon --start --pidfile $@ --name $* --make-pidfile --background --exec /usr/bin/make --directory "$(CURDIR)/$*/server/" run_production
 
-.PHONY: 
+.PHONY:
 start: displayTrigger.pid lightingAutomation.pid voteBattle.pid
+
 .PHONY: stop
 stop:
 	for PID in $$(ls *.pid) ; do \
