@@ -2,7 +2,10 @@
 [Unit]
 Description=displayTrigger
 
+# Install dbus-user-session!
 [Service]
+Type=dbus
+BusName=org.SuperLimitBreak.displaytrigger
 WorkingDirectory=PWD/displayTrigger/server
 ExecStart=/usr/bin/make run_production
 Restart=always
