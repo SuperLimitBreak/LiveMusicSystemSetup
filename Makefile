@@ -82,19 +82,40 @@ pull: clone
 
 # Run --------------------------------------------------------------------------
 
-%.pid:
-	# Unfinished experiment
-	start-stop-daemon --start --pidfile $@ --name $* --make-pidfile --background --exec /usr/bin/make --directory "$(CURDIR)/$*/server/" run_production
+RUN_PATH_displayTrigger=server
+RUN_PATH_lightingAutomation=.
+RUN_PATH_voteBattle=server
 
-.PHONY:
-start: displayTrigger.pid lightingAutomation.pid voteBattle.pid
+.PHONY: start
+start: start_displayTrigger start_voteBattle start_lightingAutomation
 
 .PHONY: stop
-stop:
-	for PID in $$(ls *.pid) ; do \
-		start-stop-daemon --stop  --pidfile $$PID && rm $$PID ;\
-	done
-	rm -rf *.pid
+stop: stop_displayTrigger stop_voteBattle stop_lightingAutomation
+
+# $(CURDIR) can be replaced with $(pwd) to run in shell
+# RUN_PATH_ is because the makefile may not be in the root of the project folder
+# All subprojects should have a run_production target
+start_%:
+	nohup /usr/bin/make --directory "$(CURDIR)/$*/$(RUN_PATH_$*)" run_production &
+
+stop_%:
+	kill $$(ps -ef | grep $* | grep -v grep | grep -v make | awk '{print $$2}')
+
+
+# OLD Linux experiemnt
+#
+#%.pid:
+#	# Unfinished experiment
+#	start-stop-daemon --start --pidfile $@ --name $* --make-pidfile --background --exec /usr/bin/make --directory "$(CURDIR)/$*/server/" run_production
+#
+#.PHONY: 
+#start: displayTrigger.pid lightingAutomation.pid voteBattle.pid
+#.PHONY: stop
+#stop:
+#	for PID in $$(ls *.pid) ; do \
+#		start-stop-daemon --stop  --pidfile $$PID && rm $$PID ;\
+#	done
+#	rm -rf *.pid
 
 
 # Clean ------------------------------------------------------------------------
