@@ -16,24 +16,36 @@ This sets up the main projection machine to boot with the following services:
     * Provide real time control of lights via displayTrigger bus
 * voteBattle:
     * Interacive audience participation. Activated via the displayTrigger system
+* pentatonicHero:
+    * Install plugins for realtime lighting and html5 visulisation
 * Chrome
     * The html5 displayTrigger client is developed with the featureset of Chrome.
     * Chrome should be started full screen at system startup and load the html5 client
 
 Setup should be (idealy) completly automated.
 
-
-Running Services Manually
--------------------------
-
-    cd displayTrigger/server; make run
-    cd lightingAutomation ; make run
-    cd voteBattle/server; make run
-    chrome --noerrdialogs --ignore-certificate-errors --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar 'http://localhost:6543/static/projector/projector.html?deviceid=main'
+Note: This repo does *NOT* install the required event asset media that is paired with the example `displayTrigger/client/event_map.json` file.
 
 
-WIP Notes
----------
+Example demo local use
+----------------------
+
+    make install
+    # setup displayTrigger/server/production.inidiff to point at absolute eventassets folder
+    make start
+    python -m webbrowser -t "http://localhost:6543/static/projector/projector.html?deviceid=main"
+    python -m webbrowser -t "http://localhost:6543/static/control/control.html"
+    python -m webbrowser -t "http://localhost:6543/ext/lightingRemoteControl.html"
+    cd lightingAutomation && make pygame && make run_simulator
+    # Do stuff
+    make stop
+
+
+hardwareSetup Notes
+-------------------
+
+Some elements of the hardware setup are currently in a separate repo networkSetup.
+This loosely covers
 
 * Graphics Setup
   * Drivers for graphics cards
@@ -48,9 +60,4 @@ WIP Notes
   * nginx
     * Rewrite host
     * Serve event assets
-* Install DisplayTrigger
-* Install VoteServer
-* Install LightingAutomation
-* Startup
   * Fullscreen Chrome over all displays
-* Import assets from known source?

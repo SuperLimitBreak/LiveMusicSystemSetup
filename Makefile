@@ -89,6 +89,7 @@ pull: clone
 RUN_PATH_displayTrigger=server
 RUN_PATH_lightingAutomation=.
 RUN_PATH_voteBattle=server
+MAKE_TARGET=run_production
 
 .PHONY: start
 start: start_displayTrigger start_voteBattle start_lightingAutomation
@@ -100,7 +101,7 @@ stop: stop_displayTrigger stop_voteBattle stop_lightingAutomation
 # RUN_PATH_ is because the makefile may not be in the root of the project folder
 # All subprojects should have a run_production target
 start_%:
-	nohup /usr/bin/make --directory "$(CURDIR)/$*/$(RUN_PATH_$*)" run_production &
+	nohup /usr/bin/make --directory "$(CURDIR)/$*/$(RUN_PATH_$*)" $(MAKE_TARGET) &
 
 stop_%:
 	kill $$(ps -ef | grep $* | grep -v grep | grep -v make | awk '{print $$2}')
