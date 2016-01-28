@@ -5,10 +5,14 @@ CHROME_BIN=/usr/bin/google-chrome
 .PHONY: help
 help:
 	# SuperLimitBreak system setup
-	#  - install - Install and setup all repos
-	#  - pull    - Update all repos
-	#  - clean   - Delete all repos
-	# (Requires git to be installed)
+	#  - install          - Install and setup all repos
+	#  - systemd_services - Setup systemd services to start on boot (Linux only)
+	#  - start            - Start all services manually
+	#  - stop             - Stop all services manually
+	#  - pull             - Update all repos
+	#  - clean            - Delete all repos
+	# (Dependencys 'apt-get install wget git make python3 virtualenv systemd')
+	# (edit displayTrigger/server/production.inidiff to point at absolute eventassets folder)
 
 
 # Install ----------------------------------------------------------------------
@@ -17,7 +21,7 @@ help:
 install: clone $(SYSTEM)_install
 
 .PHONY: Linux_install
-Linux_install: systemd_services
+Linux_install: 
 
 .PHONY: Darwin_install
 Darwin_install:
@@ -48,7 +52,7 @@ voteBattle:
 
 
 # Sytemd services -------------------------------------------------------------
-# Having "AUTO_ENABLE" in the service file will cause make to enable said unit
+# Having "AUTO_ENABLE" as a comment in the service file will cause make to enable said unit
 
 .PHONY: systemd_services
 systemd_services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service $(SERVICE_PATH)displayTriggerHTML5Client.service
@@ -65,7 +69,7 @@ $(SERVICE_PATH)%.service:
 	if grep "AUTO_ENABLE" $(SERVICE_PATH)$*.service;\
 	then\
 		systemctl --user enable $(SERVICE_PATH)$*.service;\
-    fi
+	fi
 	systemctl --user daemon-reload;
 
 
@@ -100,22 +104,6 @@ start_%:
 
 stop_%:
 	kill $$(ps -ef | grep $* | grep -v grep | grep -v make | awk '{print $$2}')
-
-
-# OLD Linux experiemnt
-#
-#%.pid:
-#	# Unfinished experiment
-#	start-stop-daemon --start --pidfile $@ --name $* --make-pidfile --background --exec /usr/bin/make --directory "$(CURDIR)/$*/server/" run_production
-#
-#.PHONY: 
-#start: displayTrigger.pid lightingAutomation.pid voteBattle.pid
-#.PHONY: stop
-#stop:
-#	for PID in $$(ls *.pid) ; do \
-#		start-stop-daemon --stop  --pidfile $$PID && rm $$PID ;\
-#	done
-#	rm -rf *.pid
 
 
 # Clean ------------------------------------------------------------------------
