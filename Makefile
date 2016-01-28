@@ -110,7 +110,7 @@ stop_%:
 
 .PHONY: clean
 clean: stop $(SYSTEM)_clean
-	rm -rf libs displayTrigger lightingAutomation voteBattle pentatonicHero
+	rm -rf libs displayTrigger lightingAutomation voteBattle pentatonicHero nohup.out
 
 .PHONY: Linux_clean
 Linux_clean:
