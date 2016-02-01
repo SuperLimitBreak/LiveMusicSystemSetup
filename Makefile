@@ -79,8 +79,8 @@ $(SERVICE_PATH)%.service:
 pull: clone
 	cd libs              ; git pull
 	cd pentatonicHero    ; git pull
-	cd displayTrigger    ; git pull
 	cd lightingAutomation; git pull
+	cd displayTrigger    ; git pull
 	cd voteBattle        ; git pull
 
 
@@ -106,6 +106,9 @@ start_%:
 stop_%:
 	kill $$(ps -ef | grep $* | grep -v grep | grep -v make | awk '{print $$2}')
 
+.PHONY: tail
+tail:
+	tail -f -n 20 nohup.out
 
 # Clean ------------------------------------------------------------------------
 
@@ -124,3 +127,9 @@ Linux_clean:
 
 .PHONY: Darwin_clean
 Darwin_clean:
+
+
+# Shortcut because I'm lazy
+.PHONY: shutdown
+shutdown:
+	sudo shutdown -h now
