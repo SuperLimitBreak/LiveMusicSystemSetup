@@ -21,7 +21,7 @@ help:
 install: clone $(SYSTEM)_install
 
 .PHONY: Linux_install
-Linux_install: 
+Linux_install:
 
 .PHONY: Darwin_install
 Darwin_install:
@@ -113,7 +113,7 @@ tail:
 # Clean ------------------------------------------------------------------------
 
 .PHONY: clean
-clean: stop $(SYSTEM)_clean
+clean: $(SYSTEM)_clean
 	rm -rf libs displayTrigger lightingAutomation voteBattle pentatonicHero nohup.out
 
 .PHONY: Linux_clean
