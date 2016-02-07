@@ -6,7 +6,7 @@ CHROME_BIN=/usr/bin/google-chrome
 help:
 	# SuperLimitBreak system setup
 	#  - install          - Install and setup all repos
-	#  - systemd_services - Setup systemd services to start on boot (Linux only)
+	#  - systemd	 	  - Setup systemd services to start on boot (Linux only)
 	#  - start            - Start all services manually
 	#  - stop             - Stop all services manually
 	#  - pull             - Update all repos
@@ -53,6 +53,9 @@ voteBattle:
 
 # Sytemd services -------------------------------------------------------------
 # Having "AUTO_ENABLE" as a comment in the service file will cause make to enable said unit
+
+.PHONY: systemd
+systemd: systemd_services
 
 .PHONY: systemd_services
 systemd_services: $(SERVICE_PATH)displayTrigger.service $(SERVICE_PATH)lightingAutomation.service $(SERVICE_PATH)voteBattle.service $(SERVICE_PATH)displayTriggerHTML5Client.service

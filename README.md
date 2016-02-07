@@ -61,3 +61,13 @@ This loosely covers
     * Rewrite host
     * Serve event assets
   * Fullscreen Chrome over all displays
+
+
+Systemd notes
+-------------
+
+Requirements: python3-dbus, dbus-user-session
+
+Install the systemd units via `make systemd`.
+Use the .Xinitrc to setup your Xsession.
+

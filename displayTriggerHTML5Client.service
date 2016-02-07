@@ -12,4 +12,4 @@ ExecStart=CHROME_BIN --noerrdialogs --kiosk --disable-plugins --disable-extensio
 Restart=always
 
 [Install]
-WantedBy=graphical.target
+WantedBy=default.target
