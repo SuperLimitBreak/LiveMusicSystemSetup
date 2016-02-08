@@ -5,10 +5,13 @@ After=displayTrigger.service
 
 [Service]
 # Assumes this service won't be ran until an Xorg is up
+# We're starting this service in the XFCE gui with something like:
+# mousemove is used to cause the browser to hide the cursor
+# /bin/bash -c 'sleep 3; systemctl --user start displayTriggerHTML5Client.service; sleep 1; xtr "mousemove 50 50"'
 # Could still have issues with Xauthority
 Environment=DISPLAY=:0
 # Chrome binary filled in externally
-ExecStart=CHROME_BIN --noerrdialogs --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar --no-default-browser-check 'http://localhost:6543/static/projector/projector.html?deviceid=main'
+ExecStart=CHROME_BIN --noerrdialogs --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar --no-default-browser-check --disable-session-crashed-bubble 'http://localhost:6543/static/projector/projector.html?deviceid=main'
 Restart=always
 
 [Install]
