@@ -11,7 +11,7 @@ After=displayTrigger.service
 # Could still have issues with Xauthority
 Environment=DISPLAY=:0
 # Chrome binary filled in externally
-ExecStart=CHROME_BIN --noerrdialogs --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar --no-default-browser-check --disable-session-crashed-bubble 'http://localhost:6543/static/projector/projector.html?deviceid=main'
+ExecStart=CHROME_BIN --noerrdialogs --kiosk --disable-plugins --disable-extensions --no-first-run --disable-overlay-scrollbar --no-default-browser-check --disable-session-crashed-bubble --incognito 'http://localhost:6543/static/projector/projector.html?deviceid=main'
 Restart=always
 
 [Install]
