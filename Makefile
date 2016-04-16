@@ -27,7 +27,7 @@ Linux_install:
 Darwin_install:
 
 .PHONY: clone
-clone: libs pentatonicHero displayTrigger lightingAutomation voteBattle
+clone: libs pentatonicHero lightingAutomation webMidiTools displayTrigger voteBattle
 
 
 # Repos ------------------------------------------------------------------------
@@ -38,13 +38,16 @@ libs:
 pentatonicHero:
 	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
 
-displayTrigger:
-	git clone https://github.com/SuperLimitBreak/displayTrigger.git
-	cd displayTrigger/server; make install
-
 lightingAutomation:
 	git clone https://github.com/SuperLimitBreak/lightingAutomation.git
 	cd lightingAutomation ; make install
+
+webMidiTools:
+	git clone https://github.com/SuperLimitBreak/webMidiTools.git
+
+displayTrigger:
+	git clone https://github.com/SuperLimitBreak/displayTrigger.git
+	cd displayTrigger/server; make install
 
 voteBattle:
 	git clone https://github.com/SuperLimitBreak/voteBattle.git
@@ -83,6 +86,7 @@ pull: clone
 	cd libs              ; git pull
 	cd pentatonicHero    ; git pull
 	cd lightingAutomation; git pull
+	cd webMidiTools      ; git pull
 	cd displayTrigger    ; git pull
 	cd voteBattle        ; git pull
 
@@ -112,6 +116,7 @@ stop_%:
 .PHONY: tail
 tail:
 	tail -f -n 20 nohup.out
+	#journalctl -f --user-unit lightingAutomation
 
 # Clean ------------------------------------------------------------------------
 
