@@ -47,7 +47,7 @@ webMidiTools:
 
 displayTrigger:
 	git clone https://github.com/SuperLimitBreak/displayTrigger.git
-	cd displayTrigger/server; make install
+	cd displayTrigger ; make install
 
 voteBattle:
 	git clone https://github.com/SuperLimitBreak/voteBattle.git
