@@ -1,0 +1,79 @@
+{
+  "name": "stageViewer",
+  "version": "0.0.0",
+  "description": "",
+  "main": "static/export.bundle.js",
+  "dependencies": {
+    "core-js": "latest",
+    "normalize.css": "latest",
+    "react": "latest"
+  },
+  "devDependencies": {
+    "babel-core": "latest",
+    "babel-eslint": "latest",
+    "babel-loader": "latest",
+    "babel-polyfill": "latest",
+    "babel-preset-modern-browsers": "latest",
+    "babel-preset-react": "latest",
+    "babelify": "latest",
+    "copyfiles": "latest",
+    "css-loader": "latest",
+    "eslint": "latest",
+    "eslint-loader": "latest",
+    "eslint-plugin-react": "latest",
+    "file-loader": "latest",
+    "glob": "latest",
+    "immutable": "latest",
+    "jasmine-core": "latest",
+    "karma": "latest",
+    "karma-chrome-launcher": "latest",
+    "karma-firefox-launcher": "latest",
+    "karma-jasmine": "latest",
+    "karma-sourcemap-loader": "latest",
+    "karma-spec-reporter": "latest",
+    "karma-webpack": "latest",
+    "minimist": "latest",
+    "mocktail": "latest",
+    "node-sass": "latest",
+    "npm-link": "latest",
+    "npm-run-all": "latest",
+    "null-loader": "latest",
+    "open": "latest",
+    "pubsub-js": "latest",
+    "pycollections": "latest",
+    "react-dom": "latest",
+    "react-addons-test-utils": "latest",
+    "rimraf": "latest",
+    "sass-loader": "latest",
+    "style-loader": "latest",
+    "three": "latest",
+    "tween.js": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "webpack-dev-server": "latest"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "opt --in pre-commit --exec \"npm run validate\""
+    }
+  },
+  "scripts": {
+    "start": "webpack-dev-server",
+    "prod": "webpack-dev-server -p",
+    "build": "webpack -p",
+    "lint": "eslint ./src ./webpack.config.js -f table || true",
+    "test": "karma start",
+    "test:watch": "karma start --autoWatch=true --singleRun=false"
+  },
+  "repository": "git@github.com:SuperLimitBreak/stageViewer.git",
+  "keywords": [
+    "displayTrigger",
+    "html5",
+    "projector",
+    "dmx",
+    "lighting"
+  ],
+  "author": "superlimitbreak.uk",
+  "license": "GPL-3.0",
+  "private": false
+}

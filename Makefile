@@ -27,31 +27,40 @@ Linux_install:
 Darwin_install:
 
 .PHONY: clone
-clone: libs pentatonicHero lightingAutomation webMidiTools displayTrigger voteBattle
+clone: libs stageOrchistration stageViewer webMidiTools displayTrigger
+#pentatonicHero voteBattle
 
 
 # Repos ------------------------------------------------------------------------
 
 libs:
-	git clone https://github.com/calaldees/libs.git
+	git clone https://github.com/calaldees/$@.git
 
-pentatonicHero:
-	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
+#pentatonicHero:
+#	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
 
-lightingAutomation:
-	git clone https://github.com/SuperLimitBreak/lightingAutomation.git
-	cd lightingAutomation ; make install
+#lightingAutomation:
+#	git clone https://github.com/SuperLimitBreak/lightingAutomation.git
+#	cd lightingAutomation ; make install
+
+stageOrchistration:
+	git clone https://github.com/SuperLimitBreak/$@.git
+	cd $@ ; make install
+
+stageViewer:
+	git clone https://github.com/SuperLimitBreak/$@.git
+	cd $@ ; make install
 
 webMidiTools:
-	git clone https://github.com/SuperLimitBreak/webMidiTools.git
+	git clone https://github.com/SuperLimitBreak/$@.git
 
 displayTrigger:
-	git clone https://github.com/SuperLimitBreak/displayTrigger.git
-	cd displayTrigger ; make install
+	git clone https://github.com/SuperLimitBreak/$@.git
+	cd $@ ; make install
 
-voteBattle:
-	git clone https://github.com/SuperLimitBreak/voteBattle.git
-	cd voteBattle/server; make install
+#voteBattle:
+#	git clone https://github.com/SuperLimitBreak/voteBattle.git
+#	cd voteBattle/server; make install
 
 
 # Sytemd services -------------------------------------------------------------

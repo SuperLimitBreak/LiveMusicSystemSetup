@@ -1,0 +1,5 @@
+pyramid
+waitress
+pyramid_mako
+python-dateutil
+git+https://github.com/calaldees/libs.git@master#egg=calaldees

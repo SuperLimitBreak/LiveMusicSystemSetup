@@ -1,0 +1,53 @@
+version: '3.6'
+
+volumes:
+    stageViewer_node_modules:
+    stageViewer_node_modules2:
+
+
+services:
+
+    display_trigger_server:
+        build:
+            context: ./docker
+            dockerfile: displayTriggerServer.dockerfile
+        ports:
+            - 6543:6543
+            - 9872:9872
+            - 9873:9872
+        volumes:
+            - ../displayTrigger/:/displayTrigger:ro
+        working_dir: /displayTrigger/server
+        environment:
+            - PYTHONPATH=./
+        command:  pserve --reload development.ini
+
+    stage_orchestration:
+        build:
+            context: ./docker
+            dockerfile: stageOrchestration.dockerfile
+        volumes:
+            - ../stageOrchestration:/stageOrchestration:ro
+        ports:
+            - 23487:23487
+        links:
+            - display_trigger_server
+        working_dir: /stageOrchestration
+        command: python3 server.py --config config.development.yaml --displaytrigger_host display_trigger_server
+
+    stage_viewer:
+        build:
+            context: ./docker
+            dockerfile: stageViewer.dockerfile
+        ports:
+            - 8001:8001
+        volumes:
+            #- stageViewer_node_modules2:/stageViewer/node_modules/displayTrigger/node_modules:rw
+            - stageViewer_node_modules:/stageViewer/node_modules:rw
+            - ../displayTrigger/display:/stageViewer/node_modules/displayTrigger:ro
+            - ../displayTrigger:/displayTrigger:ro
+            - ../stageViewer:/stageViewer:ro
+        links:
+            - stage_orchestration
+        working_dir: /stageViewer
+        command: npm run start
