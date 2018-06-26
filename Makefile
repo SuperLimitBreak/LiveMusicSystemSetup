@@ -19,6 +19,9 @@ install: clone
 .PHONY: clone
 clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
 
+config_merger.py:
+	curl https://raw.githubusercontent.com/calaldees/config-merger/master/config_merger.py -o $@
+
 
 # Repos ------------------------------------------------------------------------
 
@@ -47,7 +50,15 @@ ${ROOT_FOLDER}/displayTrigger:
 #	git clone https://github.com/SuperLimitBreak/voteBattle.git
 #	cd voteBattle/server; make install
 
-run: install
+DOCKER_COMPOSE_PATHS=displayTrigger/server stageOrchistration stageViewer
+docker-compose.yml: config_merger.py
+	for PATH_DOCKER_COMPOSE in ${DOCKER_COMPOSE_PATHS}; do\
+		${ROOT_FOLDER}/$$PATH_DOCKER_COMPOSE ;\
+	done
+
+
+
+run: install docker-compose.yml
 	docker-compose --file ${ROOT_FOLDER}/displayTrigger/server/docker-compose.yml --file ${ROOT_FOLDER}/stageOrchistration/docker-compose.yml --file ${ROOT_FOLDER}/stageViewer/docker-compose.yml up
 
 
@@ -56,7 +67,7 @@ run: install
 .PHONY: pull
 pull: clone
 	for REPO in ${REPOS}; do\
-		cd ${ROOT_FOLDER}/${REPO} ; git pull;\
+		cd ${ROOT_FOLDER}/$$REPO ; git pull;\
 	done
 
 
@@ -65,5 +76,5 @@ pull: clone
 .PHONY: clean
 clean:
 	for REPO in ${REPOS}; do\
-		rm -rf ${ROOT_FOLDER}/${REPO} ;\
+		rm -rf ${ROOT_FOLDER}/$$REPO ;\
 	done
