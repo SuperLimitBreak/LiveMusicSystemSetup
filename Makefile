@@ -61,6 +61,9 @@ docker-compose.yml: config_merger.py
 run: install docker-compose.yml
 	docker-compose --file ${ROOT_FOLDER}/displayTrigger/server/docker-compose.yml --file ${ROOT_FOLDER}/stageOrchistration/docker-compose.yml --file ${ROOT_FOLDER}/stageViewer/docker-compose.yml up
 
+build: clone
+	docker build --file nginx.production.dockerfile ${ROOT_FOLDER}
+
 
 # Pull Updates -----------------------------------------------------------------
 
