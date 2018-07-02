@@ -1,0 +1,24 @@
+services:
+
+  displaytrigger:
+    image: superlimitbreak/displaytrigger:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ${PATH_HOST_media}:/srv/media/:ro
+      - ${PATH_HOST_eventmap}:/srv/eventmap/:ro
+    links:
+      - subscriptionserver
+
+  subscriptionserver:
+    image: superlimitbreak/subscriptionserver:latest
+    ports:
+      - "9872:9872"
+      - "9873:9873"
+
+  stageorchestration:
+    image: superlimitbreak/stageorchestration:latest
+    ports:
+      - "21792:21792"
+    links:
+      - subscriptionserver

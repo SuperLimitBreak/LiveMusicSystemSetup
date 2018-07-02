@@ -40,7 +40,7 @@ robocopy %PATH_HOST_stageViewer% %PATH_CONTAINER_stageViewer%
 robocopy %PATH_HOST_stageOrchestration% %PATH_CONTAINER_stageOrchestration%
 robocopy %PATH_HOST_webMidiTools%\webMidiMultiplexer.html %PATH_CONTAINER_webMidiTools%
 
-docker build -t superlimitbreak/displaytrigger:latest --file .\nginx.production.dockerfile %PATH_BUILD%
+docker build -t superlimitbreak/displaytrigger:latest --file .\displaytrigger.dockerfile %PATH_BUILD%
 REM docker push superlimitbreak/displaytrigger:latest
 
 
