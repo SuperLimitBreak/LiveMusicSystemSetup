@@ -1,4 +1,5 @@
 ROOT_FOLDER=..
+PATH_BUILD=_build
 
 REPOS=libs stageOrchestration stageViewer webMidiTools displayTrigger
 #pentatonicHero voteBattle
@@ -78,6 +79,7 @@ pull: clone
 
 .PHONY: clean
 clean:
+	rm -rf ${PATH_BUILD}
 	for REPO in ${REPOS}; do\
 		rm -rf ${ROOT_FOLDER}/$$REPO ;\
 	done

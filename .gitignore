@@ -10,5 +10,7 @@ lightingAutomation/
 pentatonicHero/
 voteBattle/
 
+_build/
+
 nohup.out
 config_merger.py

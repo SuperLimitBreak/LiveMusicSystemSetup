@@ -1,45 +1,18 @@
 FROM nginx:mainline-alpine
 
-# The 'build context' for this dockerfile should have all the superLimitBreak repos 'cloned' and 'built'
+# The 'build context' for this dockerfile should have all static files for serving built in a particular folder structure for serving - There should be support scripts to do this
+# docker build -t displaytrigger --file .\nginx.production.dockerfile %PATH_BUILD%
+# docker run --rm -it -p 80:80 displaytrigger
 
-ARG PATH_HOST_server=displayTrigger/server
-ARG PATH_HOST_trigger=displayTrigger/trigger/static
-ARG PATH_HOST_display=displayTrigger/display/static
-ARG PATH_HOST_displayconfig=displayTrigger/display/display_configs
-ARG PATH_HOST_stageViewer=stageViewer/static
-ARG PATH_HOST_stageOrchestration=stageOrchestration/web/static
-ARG PATH_HOST_webMidiTools=webMidiTools
-
-ENV \
-    PATH_CONTAINER_server=/srv/root/ \
-    PATH_CONTAINER_eventmap=/srv/eventmap/ \
-    PATH_CONTAINER_displayconfig=/srv/displayconfig/ \
-    PATH_CONTAINER_trigger=/srv/trigger/ \
-    PATH_CONTAINER_display=/srv/display/ \
-    PATH_CONTAINER_stageViewer=/srv/stageViewer/ \
-    PATH_CONTAINER_stageOrchestration=/srv/stageOrchestration/ \
-    PATH_CONTAINER_webMidiTools=/srv/webMidiTools/ \
-    PATH_CONTAINER_media=/srv/media/
-
-COPY ${PATH_HOST_server}/nginx.conf /tmp/nginx.conf
-RUN /bin/sh -c "DOLLAR='$$' envsubst < /tmp/nginx.conf > /etc/nginx/nginx.conf"
-
-COPY ${PATH_HOST_server}/root ${PATH_CONTAINER_server}
-# Code - Must be built already by HOST
-# all of the dynamicly mounted `volumes` in docker-compose.yml need to be COPYed
-COPY ${PATH_HOST_webMidiTools} ${PATH_CONTAINER_webMidiTools}
-COPY ${PATH_HOST_trigger} ${PATH_CONTAINER_trigger}
-COPY ${PATH_HOST_display} ${PATH_CONTAINER_display}
-COPY ${PATH_HOST_stageViewer} ${PATH_CONTAINER_stageViewer}
-COPY ${PATH_HOST_stageOrchestration} ${PATH_CONTAINER_stageOrchestration}
-
-# Data
-COPY ${PATH_HOST_displayconfig} ${PATH_CONTAINER_displayconfig}
+COPY . /srv/
 
 # Data - should be mounted dynamically
 # ${PATH_HOST_eventmap} -> ${PATH_CONTAINER_eventmap}
 # ${PATH_HOST_media} -> ${PATH_CONTAINER_media}
-RUN echo "eventmaps should be mounted here" > ${PATH_CONTAINER_eventmap}/readme.txt
-RUN echo "media should be mounted here" > ${PATH_CONTAINER_media}/readme.txt
+RUN DIR=/srv/eventmap/ && mkdir -p ${DIR} && echo "${DIR} should be mounted here" >> ${DIR}/readme.txt
+RUN DIR=/srv/media/ && mkdir -p ${DIR} && echo "${DIR} should be mounted here" >> ${DIR}/readme.txt
+
+COPY ./nginx.conf /etc/nginx/nginx.conf
+#RUN /bin/sh -c "DOLLAR='$$' envsubst < /srv/nginx.conf > /etc/nginx/nginx.conf"
 
 CMD nginx -g 'daemon off;'
