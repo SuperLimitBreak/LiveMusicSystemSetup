@@ -33,6 +33,7 @@ robocopy %PATH_HOST_webMidiTools%\webMidiMultiplexer.html %PATH_BUILD%\webMidiTo
 
 REM %PATH_BUILD%\eventmap
 
+docker pull nginx:mainline-alpine
 docker build -t superlimitbreak/displaytrigger:latest --file .\displaytrigger.dockerfile %PATH_BUILD%
 REM docker push superlimitbreak/displaytrigger:latest
 
