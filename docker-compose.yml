@@ -1,3 +1,5 @@
+version: '3.6'
+
 services:
 
   displaytrigger:
@@ -6,9 +8,11 @@ services:
       - "80:80"
     volumes:
       - ${PATH_HOST_media}:/srv/media/:ro
-      - ${PATH_HOST_eventmap}:/srv/eventmap/:ro
+      - ${PATH_HOST_media}:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
     links:
       - subscriptionserver
+
+  # TODO: Add falcon_bridge
 
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
@@ -19,6 +23,7 @@ services:
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
     ports:
-      - "21792:21792"
+      - "23487:23487"
     links:
       - subscriptionserver
+    command: --config config.development.yaml --displaytrigger_host subscriptionserver
