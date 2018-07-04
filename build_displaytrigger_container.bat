@@ -29,7 +29,7 @@ robocopy %PATH_HOST_displayconfig% %PATH_BUILD%\displayconfig
 
 robocopy %PATH_HOST_stageViewer% %PATH_BUILD%\stageViewer
 robocopy %PATH_HOST_stageOrchestration% %PATH_BUILD%\stageOrchestration
-robocopy %PATH_HOST_webMidiTools%\webMidiMultiplexer.html %PATH_BUILD%\webMidiTools
+xcopy %PATH_HOST_webMidiTools%\webMidiMultiplexer.html %PATH_BUILD%\webMidiTools\
 
 REM %PATH_BUILD%\eventmap
 
