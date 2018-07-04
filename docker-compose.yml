@@ -8,22 +8,27 @@ services:
       - "80:80"
     volumes:
       - ${PATH_HOST_media}:/srv/media/:ro
-      - ${PATH_HOST_media}:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
+      - ${PATH_HOST_media}/displayTriggerEventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
     links:
       - subscriptionserver
-
-  # TODO: Add falcon_bridge
 
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
     ports:
       - "9872:9872"
       - "9873:9873"
+    #command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # for debuging
 
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
     ports:
       - "23487:23487"
+    volumes:
+      - ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
+      #- ${PATH_HOST_media}/stageDescription:/stageOrchestration/data/stageDescription/:ro
     links:
       - subscriptionserver
     command: --config config.development.yaml --displaytrigger_host subscriptionserver
+
+  # TODO: Add falcon_bridge
+  # TODO: Add udp->websocket bridge?

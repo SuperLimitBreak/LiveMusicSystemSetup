@@ -1,0 +1,42 @@
+[
+    {
+        "name": "empty",
+        "events": [" ", "note_on-A3"],
+        "payload": [
+            {"deviceid": "all", "func": "trigger.empty"},
+            {"deviceid": "lights", "func": "lights.clear"}
+        ]
+    },
+    {
+        "name": "light_test",
+        "events": [],
+        "payload": [
+            {"deviceid": "lights", "func": "LightTiming.start", "scene": "light_sequence"}
+        ]
+    },
+
+    {
+        "name": "test_html_bubble",
+        "events": ["note_on-D0"],
+        "payload": [
+            {"func": "text.html_bubble", "deviceid": "front", "html": "<h1>Title</h1><p>Subtitle</p><p>superLimitBreak tech stack example</p>"}
+        ]
+    },
+
+    {
+        "name": "test_fade",
+        "events": ["note_on-E0"],
+        "payload": [
+            {"func": "fade.fade", "deviceid": "front"}
+        ]
+    },
+
+    {
+        "name": "test_image",
+        "events": [],
+        "payload": [
+            {"deviceid": "main", "func": "image.start", "src": "test_image.png", "className": "pixelated"}
+        ]
+    }
+
+]
