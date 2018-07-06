@@ -7,6 +7,7 @@ SET PATH_HOST_trigger=%PATH_REPOS%\displayTrigger\trigger\static
 SET PATH_HOST_display=%PATH_REPOS%\displayTrigger\display\static
 SET PATH_HOST_displayconfig=%PATH_REPOS%\displayTrigger\displayconfig
 SET PATH_HOST_stageViewer=%PATH_REPOS%\stageViewer\static
+SET PATH_HOST_stageconfig=%PATH_REPOS%\stageViewer\stageconfig
 SET PATH_HOST_stageOrchestration=%PATH_REPOS%\stageOrchestration\web\static
 SET PATH_HOST_webMidiTools=%PATH_REPOS%\webMidiTools
 
@@ -28,6 +29,7 @@ robocopy %PATH_HOST_display% %PATH_BUILD%\display
 robocopy %PATH_HOST_displayconfig% %PATH_BUILD%\displayconfig
 
 robocopy %PATH_HOST_stageViewer% %PATH_BUILD%\stageViewer
+robocopy %PATH_HOST_stageconfig% %PATH_BUILD%\stageconfig
 robocopy %PATH_HOST_stageOrchestration% %PATH_BUILD%\stageOrchestration
 xcopy %PATH_HOST_webMidiTools%\webMidiMultiplexer.html %PATH_BUILD%\webMidiTools\
 
