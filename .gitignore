@@ -1,16 +1,15 @@
-.DS_Store
+**/.DS_Store
 *.pyc
 *.pid
 
-requirements.pip
-
-libs/
-displayTrigger/
-lightingAutomation/
-pentatonicHero/
-voteBattle/
+libs
+displayTrigger
+stageViewer
+stageOrchestration
+webMidiTools
 
 _build/
 
+requirements.pip
 nohup.out
 config_merger.py
