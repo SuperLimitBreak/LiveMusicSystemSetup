@@ -96,7 +96,7 @@ docker-compose.yml: config_merger.py
 build: install
 	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file displaytrigger.dockerfile ${ROOT_FOLDER}
 	docker build -t ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} --file ${ROOT_FOLDER}/libs/python3/calaldees/multisocket/subscription_server.dockerfile ${ROOT_FOLDER}/libs/python3/calaldees/multisocket/
-	docker build -t ${DOCKER_IMAGE_STAGEORCHESTRATION} --file Dockerfile ${ROOT_FOLDER}/stageOrchestration
+	docker build -t ${DOCKER_IMAGE_STAGEORCHESTRATION} --file ${ROOT_FOLDER}/stageOrchestration/Dockerfile ${ROOT_FOLDER}/stageOrchestration
 
 .PHONY: push
 push:
@@ -118,7 +118,7 @@ pull: clone
 # Run --------------------------------------------------------------------------
 
 .PHONY: run
-run: build
+run:
 	docker-compose up
 
 .PHONY: run_local

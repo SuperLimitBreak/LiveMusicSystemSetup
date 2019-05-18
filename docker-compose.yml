@@ -1,5 +1,7 @@
 version: '3.6'
 
+# For local dev
+
 services:
 
   displaytrigger:
@@ -8,7 +10,8 @@ services:
       - "80:80"
     volumes:
       - ${PATH_HOST_media}:/srv/media/:ro
-      - ${PATH_HOST_media}/eventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
+      - ../displayTrigger/eventmap:/srv/eventmap/:ro
+      #- ${PATH_HOST_media}/eventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
       #- ${PATH_HOST_media}/stageconfig:/srv/stageconfig/:ro
     links:
       - subscriptionserver
@@ -25,11 +28,12 @@ services:
     ports:
       - "23487:23487"
     volumes:
-      - ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
+      #- ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
+      - ${PATH_HOST_media}:/srv/media/:ro
       #- ${PATH_HOST_media}/stageDescription:/stageOrchestration/data/stageDescription/:ro
     links:
       - subscriptionserver
-    command: --config config.development.yaml --displaytrigger_host subscriptionserver
+    command: --config=config.development.yaml --displaytrigger_host=subscriptionserver --path_media=/srv/media/
 
   # TODO: Add falcon_bridge
   # TODO: Add udp->websocket bridge?

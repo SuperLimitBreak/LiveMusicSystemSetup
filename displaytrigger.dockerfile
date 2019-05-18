@@ -8,41 +8,46 @@
 # Reference
 # https://medium.com/@tonistiigi/advanced-multi-stage-build-patterns-6f741b852fae
 
-FROM node:alpine as node
-# https://github.com/moby/moby/issues/37345#issuecomment-400250849
-ARG PATH_BUILD_DISPLAY=display
-ARG PATH_BUILD_TRIGGER=trigger
-ARG PATH_BUILD_STAGEVIEWER=stageViewer
-ARG PATH_BUILD_SRV=srv
+FROM node:alpine as base
 RUN apk add --no-cache git python3 make
-
-
-FROM node as display
-#ENV NPM_CONFIG_PREFIX=build/display/
-COPY displayTrigger/display/package.json build/displayTrigger/display/package.json
-RUN npm install --prefix=build/displayTrigger/display/ && npm cache clean --prefix=build/displayTrigger/display/ --force
+# https://github.com/moby/moby/issues/37345#issuecomment-400250849
+ARG PATH_BUILD_TRIGGER=build/displayTrigger/trigger
+ENV PATH_BUILD_TRIGGER=${PATH_BUILD_TRIGGER}
+ARG PATH_BUILD_DISPLAY=build/displayTrigger/display
+ENV PATH_BUILD_DISPLAY=${PATH_BUILD_DISPLAY}
+ARG PATH_BUILD_STAGEVIEWER=build/stageViewer
+ENV PATH_BUILD_STAGEVIEWER=${PATH_BUILD_STAGEVIEWER}
 COPY libs/ build/libs/
-#RUN npm link build/libs/
-COPY displayTrigger/display/ build/displayTrigger/display/
-RUN npm run build --prefix=build/displayTrigger/display/
 
+FROM base as trigger
+COPY displayTrigger/trigger/ ${PATH_BUILD_TRIGGER}
+RUN make install --directory ${PATH_BUILD_TRIGGER}
 
-FROM node as trigger
-COPY libs/es6 libs/es6
-COPY displayTrigger/trigger/ build/trigger/
-RUN make install --directory build/trigger/
+FROM base as base_display
+COPY displayTrigger/display/package.json ${PATH_BUILD_DISPLAY}/package.json
+RUN npm install --prefix=${PATH_BUILD_DISPLAY} && npm cache clean --prefix=${PATH_BUILD_DISPLAY} --force
+RUN npm link build/libs/ --prefix=${PATH_BUILD_DISPLAY}
 
+FROM base as base_stageViewer
+COPY stageViewer/package.json ${PATH_BUILD_STAGEVIEWER}/package.json
+RUN npm install --prefix=${PATH_BUILD_STAGEVIEWER} && npm cache clean --prefix=${PATH_BUILD_STAGEVIEWER} --force
+RUN npm link build/libs/ --prefix=${PATH_BUILD_STAGEVIEWER}
 
-FROM display as stageViewer
-COPY stageViewer/package.json build/stageViewer/package.json
-RUN npm install --prefix=build/stageViewer/ && npm cache clean --prefix=build/stageViewer/ --force
-COPY stageViewer/ build/stageViewer/
-RUN npm link build/libs/ --prefix=build/stageViewer/
-RUN npm link build/displayTrigger/display/ --prefix=build/stageViewer/
-RUN npm run build --prefix=build/stageViewer/
+FROM base_display as display
+COPY displayTrigger/display/ ${PATH_BUILD_DISPLAY}
+RUN npm run build --prefix=${PATH_BUILD_DISPLAY}
 
+FROM base_stageViewer as stageViewer
+# humm .. can we not just copy display/static/?
+COPY --from=display ${PATH_BUILD_DISPLAY} ${PATH_BUILD_DISPLAY}
+RUN npm link ${PATH_BUILD_DISPLAY} --prefix=${PATH_BUILD_STAGEVIEWER}
+COPY stageViewer/ ${PATH_BUILD_STAGEVIEWER}
+RUN npm run build --prefix=${PATH_BUILD_STAGEVIEWER}
+
+#---
 
 FROM nginx:alpine
+ARG PATH_BUILD_SRV=srv
 RUN DIR=${PATH_BUILD_SRV}/eventmap/ && mkdir -p ${DIR} && echo "${DIR} should be mounted here" >> ${DIR}/readme.txt
 RUN DIR=${PATH_BUILD_SRV}/media/ && mkdir -p ${DIR} && echo "${DIR} should be mounted here" >> ${DIR}/readme.txt
 
@@ -52,6 +57,6 @@ COPY displayTrigger/displayconfig   ${PATH_BUILD_SRV}/displayconfig
 COPY stageViewer/stageconfig        ${PATH_BUILD_SRV}/stageconfig
 COPY webMidiTools                   ${PATH_BUILD_SRV}/webMidiTools
 
-COPY --from=trigger     build/trigger/static/                 ${PATH_BUILD_SRV}/trigger/
+COPY --from=trigger     build/displayTrigger/trigger/static/  ${PATH_BUILD_SRV}/trigger/
 COPY --from=display     build/displayTrigger/display/static/  ${PATH_BUILD_SRV}/display/
 COPY --from=stageViewer build/stageViewer/static/             ${PATH_BUILD_SRV}/stageViewer/

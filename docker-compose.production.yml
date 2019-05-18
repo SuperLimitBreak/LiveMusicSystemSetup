@@ -3,4 +3,4 @@ version: '3.6'
 services:
 
   stageorchestration:
-    command: --config config.production.yaml --displaytrigger_host subscriptionserver
+    command: --config config.docker.yaml --displaytrigger_host subscriptionserver
