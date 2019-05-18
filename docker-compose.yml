@@ -6,6 +6,9 @@ services:
 
   displaytrigger:
     image: superlimitbreak/displaytrigger:latest
+    build:
+      context: ${ROOT_FOLDER}
+      dockerfile: systemSetup/displaytrigger.dockerfile
     ports:
       - "80:80"
     volumes:
@@ -18,6 +21,9 @@ services:
 
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
+    build:
+      context: ${ROOT_FOLDER}/libs/python3/calaldees/multisocket/
+      dockerfile: subscription_server.dockerfile
     ports:
       - "9872:9872"
       - "9873:9873"
@@ -25,6 +31,9 @@ services:
 
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
+    build:
+      context: ${ROOT_FOLDER}/stageOrchestration
+      dockerfile: Dockerfile
     ports:
       - "23487:23487"
     volumes:
