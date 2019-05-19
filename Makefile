@@ -109,6 +109,7 @@ push:
 .PHONY: pull
 pull: clone
 	for REPO in ${REPOS}; do\
+		echo "Pulling $$REPO" ;\
 		cd ${ROOT_FOLDER}/$$REPO ; git pull ;\
 	done
 	for DOCKER_BASE_IMAGE in ${DOCKER_BASE_IMAGES}; do\
