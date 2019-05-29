@@ -39,6 +39,9 @@ install: clone
 clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/multisocketServer ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
 #clone: libs displayTrigger stageOrchestration stageViewer webMidiTools
 
+${ROOT_FOLDER}/.dockerignore:
+	cp .dockerignore ${ROOT_FOLDER}/
+
 # Repos ------------------------------------------------------------------------
 libs: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
@@ -98,7 +101,7 @@ docker-compose.yml: config_merger.py
 # Build ------------------------------------------------------------------------
 
 .PHONY: build
-build: install
+build: install ${ROOT_FOLDER}/.dockerignore
 	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file displaytrigger.dockerfile ${ROOT_FOLDER}
 	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
 	${MAKE} build --directory ${ROOT_FOLDER}/stageOrchestration
