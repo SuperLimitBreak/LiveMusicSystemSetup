@@ -1,7 +1,7 @@
 ROOT_FOLDER=..
 #PATH_BUILD=_build
 
-REPOS=libs stageOrchestration stageViewer webMidiTools displayTrigger
+REPOS=libs multisocketServer stageOrchestration stageViewer webMidiTools displayTrigger
 #pentatonicHero voteBattle
 
 DOCKER_BASE_IMAGES=alpine nginx:alpine node:alpine python:alpine
@@ -36,7 +36,7 @@ install: clone
 	make install --directory ${ROOT_FOLDER}/displayTrigger/trigger/
 
 .PHONY: clone
-clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
+clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/multisocketServer ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
 #clone: libs displayTrigger stageOrchestration stageViewer webMidiTools
 
 # Repos ------------------------------------------------------------------------
@@ -45,28 +45,33 @@ libs: ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/libs:
 	cd ${ROOT_FOLDER} ; git clone https://github.com/calaldees/libs.git
 
+multisocketServer: ${ROOT_FOLDER}/$@
+	ln -s ${ROOT_FOLDER}/$@
+${ROOT_FOLDER}/multisocketServer:
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/multisocketServer.git
+
 displayTrigger: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/displayTrigger:
-	cd ${ROOT_FOLDER} ; git clone https://github.com/SuperLimitBreak/displayTrigger.git
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/displayTrigger.git
 	#make install --directory ${ROOT_FOLDER}/$@
 
 stageOrchestration: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/stageOrchestration:
-	cd ${ROOT_FOLDER} ; git clone https://github.com/SuperLimitBreak/stageOrchestration.git
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/stageOrchestration.git
 	#make install --directory ${ROOT_FOLDER}/$@
 
 stageViewer: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/stageViewer:
-	cd ${ROOT_FOLDER} ; git clone https://github.com/SuperLimitBreak/stageViewer.git
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/stageViewer.git
 	#make install --directory ${ROOT_FOLDER}/$@
 
 webMidiTools: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/webMidiTools:
-	cd ${ROOT_FOLDER} ; git clone https://github.com/SuperLimitBreak/webMidiTools.git
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/webMidiTools.git
 
 #pentatonicHero:
 #	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
@@ -95,11 +100,14 @@ docker-compose.yml: config_merger.py
 .PHONY: build
 build: install
 	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file displaytrigger.dockerfile ${ROOT_FOLDER}
-	docker build -t ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} --file ${ROOT_FOLDER}/libs/python3/calaldees/multisocket/subscription_server.dockerfile ${ROOT_FOLDER}/libs/python3/calaldees/multisocket/
-	docker build -t ${DOCKER_IMAGE_STAGEORCHESTRATION} --file ${ROOT_FOLDER}/stageOrchestration/Dockerfile ${ROOT_FOLDER}/stageOrchestration
+	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
+	${MAKE} build --directory ${ROOT_FOLDER}/stageOrchestration
+	#docker build -t ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} --file ${ROOT_FOLDER}/multisocketServer/server/ ${ROOT_FOLDER}/multisocketServer/server/
+	#docker build -t ${DOCKER_IMAGE_STAGEORCHESTRATION} --file ${ROOT_FOLDER}/stageOrchestration/Dockerfile ${ROOT_FOLDER}/stageOrchestration
 
 .PHONY: push
 push:
+	# TODO: call sub Makefiles?
 	for DOCKER_IMAGE in ${DOCKER_IMAGES}; do\
 		docker push $$DOCKER_IMAGE ;\
 	done
@@ -124,6 +132,7 @@ run:
 
 .PHONY: run_local
 run_local: install
+	# TODO - unfinished concept
 	docker-compose \
 		--file ${ROOT_FOLDER}/displayTrigger/server/docker-compose.yml \
 		--file ${ROOT_FOLDER}/stageOrchistration/docker-compose.yml \
@@ -132,11 +141,16 @@ run_local: install
 
 # Clean ------------------------------------------------------------------------
 
-.PHONY: clean
-clean:
-	#rm -rf ${PATH_BUILD}
+.PHONY: clean_repos
+clean_repos:
 	for REPO in ${REPOS}; do\
 		rm -rf ${ROOT_FOLDER}/$$REPO ;\
+	done
+
+.PHONY: clean
+clean:
+	for REPO in ${REPOS}; do\
+		${MAKE} clean --directory $$REPO ;\
 	done
 	for DOCKER_IMAGE in ${DOCKER_IMAGES}; do\
 		docker rmi $$DOCKER_IMAGE ;\

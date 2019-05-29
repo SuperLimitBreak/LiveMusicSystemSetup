@@ -22,8 +22,7 @@ services:
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
     build:
-      context: ${ROOT_FOLDER}/libs/python3/calaldees/multisocket/
-      dockerfile: subscription_server.dockerfile
+      context: ${ROOT_FOLDER}/multisocketServer/server
     ports:
       - "9872:9872"
       - "9873:9873"
