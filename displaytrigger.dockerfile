@@ -17,7 +17,10 @@ ARG PATH_BUILD_DISPLAY=build/displayTrigger/display
 ENV PATH_BUILD_DISPLAY=${PATH_BUILD_DISPLAY}
 ARG PATH_BUILD_STAGEVIEWER=build/stageViewer
 ENV PATH_BUILD_STAGEVIEWER=${PATH_BUILD_STAGEVIEWER}
-COPY libs/ build/libs/
+COPY multisocketServer/package.json build/multisocketServer/package.json
+COPY multisocketServer/clients/     build/multisocketServer/clients/
+COPY libs/package.json  build/libs/package.json
+COPY libs/es6/          build/libs/es6/
 
 FROM base as trigger
 COPY displayTrigger/trigger/ ${PATH_BUILD_TRIGGER}
@@ -26,12 +29,15 @@ RUN make install --directory ${PATH_BUILD_TRIGGER}
 FROM base as base_display
 COPY displayTrigger/display/package.json ${PATH_BUILD_DISPLAY}/package.json
 RUN npm install --prefix=${PATH_BUILD_DISPLAY} && npm cache clean --prefix=${PATH_BUILD_DISPLAY} --force
-RUN npm link build/libs/ --prefix=${PATH_BUILD_DISPLAY}
+RUN npm link build/multisocketServer/ --prefix=${PATH_BUILD_DISPLAY}
+RUN npm link build/libs/              --prefix=${PATH_BUILD_DISPLAY}
 
 FROM base as base_stageViewer
 COPY stageViewer/package.json ${PATH_BUILD_STAGEVIEWER}/package.json
 RUN npm install --prefix=${PATH_BUILD_STAGEVIEWER} && npm cache clean --prefix=${PATH_BUILD_STAGEVIEWER} --force
-RUN npm link build/libs/ --prefix=${PATH_BUILD_STAGEVIEWER}
+RUN npm link build/multisocketServer/ --prefix=${PATH_BUILD_STAGEVIEWER}
+RUN npm link build/libs/              --prefix=${PATH_BUILD_STAGEVIEWER}
+
 
 FROM base_display as display
 COPY displayTrigger/display/ ${PATH_BUILD_DISPLAY}
