@@ -6,6 +6,6 @@
 **/node_modules/
 **/*.md
 **/.vscode
-**/*.egg
+**/*.egg-info
 **/static/
 **/dist/

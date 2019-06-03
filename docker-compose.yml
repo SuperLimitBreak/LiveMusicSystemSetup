@@ -28,6 +28,13 @@ services:
       - "9873:9873"
     #command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # for debuging
 
+  mediainfoservice:
+    image: superlimitbreak/mediainfoservice:latest
+    build:
+      context: ${ROOT_FOLDER}/mediaInfoService
+    ports:
+      - "8331:8331"
+
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
     build:
@@ -37,9 +44,9 @@ services:
       - "23487:23487"
     volumes:
       #- ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
-      - ${PATH_HOST_media}:/srv/media/:ro
       #- ${PATH_HOST_media}/stageDescription:/stageOrchestration/data/stageDescription/:ro
     links:
+      - mediainfoserver
       - subscriptionserver
     command: --config=config.development.yaml --displaytrigger_host=subscriptionserver --path_media=/srv/media/
 
