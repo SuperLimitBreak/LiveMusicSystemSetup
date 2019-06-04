@@ -46,6 +46,7 @@ RUN npm run build --prefix=${PATH_BUILD_DISPLAY}
 FROM base_stageViewer as stageViewer
 # humm .. can we not just copy display/static/?
 COPY --from=display ${PATH_BUILD_DISPLAY} ${PATH_BUILD_DISPLAY}
+RUN rm -rf ${PATH_BUILD_DISPLAY}/node_modules
 RUN npm link ${PATH_BUILD_DISPLAY} --prefix=${PATH_BUILD_STAGEVIEWER}
 COPY stageViewer/ ${PATH_BUILD_STAGEVIEWER}
 RUN npm run build --prefix=${PATH_BUILD_STAGEVIEWER}

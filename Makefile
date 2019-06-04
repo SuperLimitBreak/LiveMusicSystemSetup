@@ -8,6 +8,7 @@ DOCKER_BASE_IMAGES=alpine nginx:alpine node:alpine python:alpine
 DOCKER_BUILD_VERSION=latest
 DOCKER_PACKAGE=superlimitbreak
 DOCKER_IMAGE_DISPLAYTRIGGER=${DOCKER_PACKAGE}/displaytrigger:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGE_MEDIAINFOSERVICE=${DOCKER_PACKAGE}/mediainfoservice:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_SUBSCRIPTIONSERVER=${DOCKER_PACKAGE}/subscriptionserver:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_STAGEORCHESTRATION=${DOCKER_PACKAGE}/stageorchestration:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGES=${DOCKER_IMAGE_DISPLAYTRIGGER} ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} ${DOCKER_IMAGE_STAGEORCHESTRATION}
@@ -120,12 +121,12 @@ push:
 
 .PHONY: pull
 pull: clone
+	for DOCKER_BASE_IMAGE in ${DOCKER_BASE_IMAGES}; do\
+		docker pull $$DOCKER_BASE_IMAGE ;\
+	done
 	for REPO in ${REPOS}; do\
 		echo "Pulling $$REPO" ;\
 		cd ${ROOT_FOLDER}/$$REPO ; git pull ;\
-	done
-	for DOCKER_BASE_IMAGE in ${DOCKER_BASE_IMAGES}; do\
-		docker pull $$DOCKER_BASE_IMAGE ;\
 	done
 
 # Run --------------------------------------------------------------------------

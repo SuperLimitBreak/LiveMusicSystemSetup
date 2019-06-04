@@ -28,6 +28,19 @@ services:
       - "9873:9873"
     #command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # for debuging
 
+  # subscriptionserver_bridge:
+  #   image: superlimitbreak/subscriptionserver_bridge:latest
+  #   build:
+  #     context: ${ROOT_FOLDER}/multisocketServer/webBridge
+  #   ports:
+  #     - ${PORT_URL_WEBSOCKET_BRIDGE}:${PORT_URL_WEBSOCKET_BRIDGE}
+  #   links:
+  #     - subscriptionserver
+  #   command: [
+  #     '--port', '${PORT_URL_WEBSOCKET_BRIDGE}',
+  #     '--subscription_server_hostname', 'multisocket_subscription_server:${PORT_TCP}',
+  #   ]
+
   mediainfoservice:
     image: superlimitbreak/mediainfoservice:latest
     build:
