@@ -32,23 +32,25 @@ services:
     image: superlimitbreak/mediainfoservice:latest
     build:
       context: ${ROOT_FOLDER}/mediaInfoService
+    volumes:
+      - ${PATH_HOST_media}:/srv/media:ro
     ports:
       - "8331:8331"
+    command: /srv/media
 
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
     build:
       context: ${ROOT_FOLDER}/stageOrchestration
-      dockerfile: Dockerfile
     ports:
       - "23487:23487"
     volumes:
       #- ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
       #- ${PATH_HOST_media}/stageDescription:/stageOrchestration/data/stageDescription/:ro
     links:
-      - mediainfoserver
+      - mediainfoservice
       - subscriptionserver
-    command: --config=config.development.yaml --displaytrigger_host=subscriptionserver --path_media=/srv/media/
+    command: --config=config.development.yaml --displaytrigger_host=subscriptionserver --mediainfo_host=mediainfoservice:8331
 
   # TODO: Add falcon_bridge
   # TODO: Add udp->websocket bridge?
