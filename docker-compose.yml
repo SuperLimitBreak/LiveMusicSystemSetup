@@ -22,7 +22,7 @@ services:
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
     build:
-      context: ${ROOT_FOLDER}/multisocketServer/server
+      context: ${ROOT_FOLDER}/multisocketServer/multisocketServer/server
     ports:
       - "9872:9872"
       - "9873:9873"
@@ -57,7 +57,7 @@ services:
       context: ${ROOT_FOLDER}/stageOrchestration
     ports:
       - "23487:23487"
-    volumes:
+    #volumes:
       #- ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
       #- ${PATH_HOST_media}/stageDescription:/stageOrchestration/data/stageDescription/:ro
     links:
