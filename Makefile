@@ -1,17 +1,18 @@
 ROOT_FOLDER=..
 #PATH_BUILD=_build
 
-REPOS=libs multisocketServer stageOrchestration stageViewer webMidiTools displayTrigger
+REPOS=libs multisocketServer stageOrchestration stageViewer webMidiTools displayTrigger mediaTimelineRenderer mediaInfoService
 #pentatonicHero voteBattle
 
-DOCKER_BASE_IMAGES=alpine nginx:alpine node:alpine python:alpine
+DOCKER_BASE_IMAGES=alpine nginx:alpine node:alpine python:alpine jrottenberg/ffmpeg
 DOCKER_BUILD_VERSION=latest
 DOCKER_PACKAGE=superlimitbreak
 DOCKER_IMAGE_DISPLAYTRIGGER=${DOCKER_PACKAGE}/displaytrigger:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_MEDIAINFOSERVICE=${DOCKER_PACKAGE}/mediainfoservice:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGE_MEDIATIMELINERENDERER=${DOCKER_PACKAGE}/mediatimelinerenderer:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_SUBSCRIPTIONSERVER=${DOCKER_PACKAGE}/subscriptionserver:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_STAGEORCHESTRATION=${DOCKER_PACKAGE}/stageorchestration:${DOCKER_BUILD_VERSION}
-DOCKER_IMAGES=${DOCKER_IMAGE_DISPLAYTRIGGER} ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} ${DOCKER_IMAGE_STAGEORCHESTRATION}
+DOCKER_IMAGES=${DOCKER_IMAGE_DISPLAYTRIGGER} ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} ${DOCKER_IMAGE_STAGEORCHESTRATION} ${DOCKER_IMAGE_MEDIATIMELINERENDERER}
 
 
 .PHONY: help
@@ -37,7 +38,7 @@ install: clone
 	make install --directory ${ROOT_FOLDER}/displayTrigger/trigger/
 
 .PHONY: clone
-clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/multisocketServer ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
+clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/multisocketServer ${ROOT_FOLDER}/mediaInfoService ${ROOT_FOLDER}/mediaTimelineRenderer ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
 #clone: libs displayTrigger stageOrchestration stageViewer webMidiTools
 
 ${ROOT_FOLDER}/.dockerignore:
@@ -48,6 +49,16 @@ libs: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/libs:
 	cd ${ROOT_FOLDER} ; git clone https://github.com/calaldees/libs.git
+
+mediaInfoService: ${ROOT_FOLDER}/$@
+	ln -s ${ROOT_FOLDER}/$@
+${ROOT_FOLDER}/mediaInfoService:
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/mediaInfoService.git
+
+mediaTimelineRenderer: ${ROOT_FOLDER}/$@
+	ln -s ${ROOT_FOLDER}/$@
+${ROOT_FOLDER}/mediaTimelineRenderer:
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/mediaTimelineRenderer.git
 
 multisocketServer: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
@@ -104,6 +115,7 @@ docker-compose.yml: config_merger.py
 .PHONY: build
 build: install ${ROOT_FOLDER}/.dockerignore
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaInfoService
+	${MAKE} build --directory ${ROOT_FOLDER}/mediaTimelineRenderer
 	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
 	${MAKE} build --directory ${ROOT_FOLDER}/stageOrchestration
 	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file displaytrigger.dockerfile ${ROOT_FOLDER}

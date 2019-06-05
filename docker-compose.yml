@@ -11,7 +11,7 @@ services:
       - "80:80"
     volumes:
       - ${PATH_HOST_media}:/srv/media/:ro
-      - ../displayTrigger/eventmap:/srv/eventmap/:ro
+      - ${ROOT_FOLDER}/displayTrigger/eventmap:/srv/eventmap/:ro
       #- ${PATH_HOST_media}/eventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
       #- ${PATH_HOST_media}/stageconfig:/srv/stageconfig/:ro
     links:
@@ -51,6 +51,17 @@ services:
       '/srv/media',
     ]
 
+  mediatimelinerenderer:
+    image: superlimitbreak/mediatimelinerenderer:latest
+    build:
+      context: ${ROOT_FOLDER}/mediaTimelineRenderer
+    volumes:
+      - ${PATH_HOST_media}:/srv/media:ro
+    command: [
+      '/srv/media',
+      '--daemon_scan_interval_seconds', '60',
+    ]
+
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
     build:
@@ -71,4 +82,3 @@ services:
     ]
 
     # TODO: Add udp->websocket bridge?
-    # TODO: Add mediaTimelineRenderer
