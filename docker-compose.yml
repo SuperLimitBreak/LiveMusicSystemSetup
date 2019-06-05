@@ -1,7 +1,5 @@
 version: '3.6'
 
-# For local dev
-
 services:
 
   displaytrigger:
@@ -28,18 +26,18 @@ services:
       - "9873:9873"
     #command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # for debuging
 
-  # subscriptionserver_bridge:
-  #   image: superlimitbreak/subscriptionserver_bridge:latest
-  #   build:
-  #     context: ${ROOT_FOLDER}/multisocketServer/webBridge
-  #   ports:
-  #     - ${PORT_URL_WEBSOCKET_BRIDGE}:${PORT_URL_WEBSOCKET_BRIDGE}
-  #   links:
-  #     - subscriptionserver
-  #   command: [
-  #     '--port', '${PORT_URL_WEBSOCKET_BRIDGE}',
-  #     '--subscription_server_hostname', 'multisocket_subscription_server:${PORT_TCP}',
-  #   ]
+  subscriptionserver_bridge:
+    image: superlimitbreak/subscriptionserver_bridge:latest
+    build:
+      context: ${ROOT_FOLDER}/multisocketServer/webBridge
+    expose:
+      - 10794
+    links:
+       - subscriptionserver
+    command: [
+      'subscriptionserver:9872',
+      '--port', '10794',
+    ]
 
   mediainfoservice:
     image: superlimitbreak/mediainfoservice:latest
@@ -47,9 +45,11 @@ services:
       context: ${ROOT_FOLDER}/mediaInfoService
     volumes:
       - ${PATH_HOST_media}:/srv/media:ro
-    ports:
-      - "8331:8331"
-    command: /srv/media
+    expose:
+      - 8331
+    command: [
+      '/srv/media',
+    ]
 
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
@@ -57,14 +57,18 @@ services:
       context: ${ROOT_FOLDER}/stageOrchestration
     ports:
       - "23487:23487"
-    #volumes:
+    volumes:
+      - ${ROOT_FOLDER}/stageOrchestration/data/sequences:/stageOrchestration/data/sequences/:ro
       #- ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
       #- ${PATH_HOST_media}/stageDescription:/stageOrchestration/data/stageDescription/:ro
     links:
       - mediainfoservice
       - subscriptionserver
-    command: --config=config.development.yaml --displaytrigger_host=subscriptionserver --mediainfo_host=mediainfoservice:8331
+    command: [
+      '--config=config.development.yaml',
+      '--displaytrigger_host=subscriptionserver',
+      '--mediainfo_url=http://mediainfoservice:8331',
+    ]
 
-  # TODO: Add falcon_bridge
-  # TODO: Add udp->websocket bridge?
-  # TODO: Add mediaTimelineRenderer
+    # TODO: Add udp->websocket bridge?
+    # TODO: Add mediaTimelineRenderer
