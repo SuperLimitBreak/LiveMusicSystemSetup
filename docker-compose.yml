@@ -56,7 +56,7 @@ services:
     build:
       context: ${ROOT_FOLDER}/mediaTimelineRenderer
     volumes:
-      - ${PATH_HOST_media}:/srv/media:ro
+      - ${PATH_HOST_media}:/srv/media
     command: [
       '/srv/media',
       '--daemon_scan_interval_seconds', '60',
