@@ -1,15 +1,18 @@
 **/.DS_Store
-*.pyc
-*.pid
+*.py[cod]
 
 libs
 displayTrigger
 stageViewer
 stageOrchestration
 webMidiTools
+mediaTimelineRenderer
+mediaInfoService
+multisocketServer
 
 _build/
-
-requirements.pip
-nohup.out
 config_merger.py
+
+nohup.out
+*.pid
+
