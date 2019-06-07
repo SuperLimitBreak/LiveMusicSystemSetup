@@ -10,11 +10,11 @@ Stage 0 - Initial problem - 2013
 --------------------------------
 
 ### Problem
-* An live music performance with interactive video game/music
-* Trigger a video in sync with our live music (Holographic singer)
+* A live music performance with interactive video game/music
+* Requirement to trigger a video in sync with our live music (A holographic singer)
 
 ### Solution
-* Spacebar at the same time
+* Spacebar at the same time on two computers
     * Cuebase
     * vlc
 
@@ -23,7 +23,6 @@ Stage 0 - Initial problem - 2013
 * BarCamp Canterbury June 2014
     * [VoteBattle](https://github.com/superLimitBreak/voteBattle/tree/38f058fbb3f221429e9e6967b79543067747d6ce)
     * [Pentatonic Hero](https://github.com/superLimitBreak/pentatonicHero/tree/bd6a873eaaf00717be0ddb58a12eb3cd687c866d)
-
 
 
 Stage 1 - October 2014 to September 2015
@@ -37,38 +36,41 @@ If we could setup a virtual midi port that then `trigger`'s a message to be sent
 
 ### Solution
 * [displayTrigger](https://github.com/superLimitBreak/displayTrigger/tree/01028f2c435d3f30d7884c1ee1651c9ca4c790d7)
-    * PyGame MIDI `trigger` listened to a midi port and sendt a [json packet](https://github.com/superLimitBreak/displayTrigger/blob/7d4d2ffc3f74f2c16dc96fc0d0ec9da9deb00e87/client/event_map.json#L13)
-        * Test [javascript webapp trigger](https://github.com/superLimitBreak/displayTrigger/blob/7d4d2ffc3f74f2c16dc96fc0d0ec9da9deb00e87/server/displaytrigger/static/control/control.html#L23) used for manual control
-    * HTML5 `display` was a [javascript webapp](https://github.com/superLimitBreak/displayTrigger/blob/7d4d2ffc3f74f2c16dc96fc0d0ec9da9deb00e87/server/displaytrigger/static/projector/projector.js#L54) running in Chrome
+    * Commandline pygame MIDI `trigger` listened to a midi port and send a [json message](https://github.com/superLimitBreak/displayTrigger/blob/7d4d2ffc3f74f2c16dc96fc0d0ec9da9deb00e87/client/event_map.json#L13)
+        * Test javascript [web trigger](https://github.com/superLimitBreak/displayTrigger/blob/7d4d2ffc3f74f2c16dc96fc0d0ec9da9deb00e87/server/displaytrigger/static/control/control.html#L23) used for manual control
+    * `display` was a HTML5/javascript [webapp](https://github.com/superLimitBreak/displayTrigger/blob/7d4d2ffc3f74f2c16dc96fc0d0ec9da9deb00e87/server/displaytrigger/static/projector/projector.js#L54)
 * [lightingAutomation](https://github.com/superLimitBreak/stageOrchestration/releases/tag/v0.1) v0.1
     * Send UDP Artnet3 DMX packets
     * Lights described in `yaml`
         * [sequences](https://github.com/superLimitBreak/stageOrchestration/blob/v0.1/data/sequences/miku_2.yaml)
         * [scenes](https://github.com/superLimitBreak/stageOrchestration/blob/v0.1/data/scenes/miku/miku_bc_fill_coutin.yaml)
-    * Lights visulised by PyGame abstract representation that rendered DMX packets
-* [pentatonicHero](https://twitter.com/calaldees/status/601659707762319360) visuals
+    * Lights visualized by pygame [DMXSimulator](https://github.com/superLimitBreak/stageOrchestration/blob/f98acd044f0fc037b36ebaaf95db5ed911e8c074/DMXSimulator.py) abstract representation that rendered DMX packets
+        * `display` played an audio file with seek bar to send absolute time to `lightingAutomation` across websocket bridge
+    * Real-time control of lights with physical MIDI-Mixer controller with HTML5/js app
+* [pentatonicHero](https://twitter.com/calaldees/status/601659707762319360) HTML5/js visuals and real-time control of lights
 
 ### Use
 * Gulbenkian September 2015
     * We could trigger videos, images, sliding text animations, iframes (for other interactive content)
     * Basic DMX lights
+        * `pentatonicHero` realtime lights
 
 
 Stage 1.5 - October 2015 to July 2016
 -------------------------------------
 
 ### Problem
-* PyGame MIDI `trigger` was a pain to constantly deploy to the music (Cuebase) machine (as it had no internet connection)
-* We wanted multiple `display` support. Could we drive a rear screen? side screens? subtitle screen (for vocal prompts)
+* pygame MIDI `trigger` was a pain to constantly deploy to the music (Cuebase) machine (as it had no internet connection)
+* Single message bus for all `displays`. All messages went to every connected device.
 * If connections dropped we had to have access to computers/terminals to fix it
 
 ### Solution
-* Deprecate PyGame MIDI `trigger` -> Javascript web `trigger` through Chrome MIDI
-* Self-Healing network client connections for websocket and tcp
-* SubscriptionServer
-    * Network bus routing to route messages to multiple listeners/displays
+* Deprecate pygame MIDI `trigger` -> javascript web `trigger` through Chrome MIDI
+* `multisocketClient` self-healing network connections for websocket and tcp
+* `multisocketServer` - SubscriptionServer
+    * Network bus routing to route messages to specific/multiple listeners/displays
 * Floor prompt subtitle `display`
-    * RaspberyPi 2 with WiFi + monitor
+    * RaspberyPi 2 with WiFi + Floor Screen
 
 ### Use
 * Minami March 2016
@@ -80,22 +82,28 @@ Stage 2 - July 2016 to November 2019
 ------------------------------------
 
 ### Problems
-* Lighting limited
+* `lightingAutomation` scripting extremely limited
     * Could only tween entire lighting rig state to another state
-    * Lots of calculations every frame (too complex to test/debug properly)
-* Visualizing what was on the `display` and what `lightingAutomation` were doing was an exercise in abstract thinking
-* Needed each `display` to have a separate Chome instance.
-    *Could we have multiple displays in a single instance of a browser?
-* Cubase music machine had lots of MIDI triggers that took a long time to setup and some tracks had 10 + triggers. Constant manual maintenance that was not committable to repo
+    * Overly complex nested anonymous function complexity every frame (too complex to test/debug properly)
+* `lightingAutomation`:`DMXSimulator` visualization was insufficient
+    * Visualizing what was on the `display` and what pygame  lights were doing was an exercise in abstract thinking
+    * Clunky, fragile and unusable by anyone other than a linux wizard
+* Needed each `display` to have a separate browser instance.
+    * Could we have multiple displays in a single instance of a browser?
+* Cubase/music machine had lots of MIDI triggers that took a long time to setup.
+    * Some tracks had 10 + triggers. Total we had 60+ triggers
+    * Constant Cuebase manual maintenance was not committable to repo
 
 ### Solution
-* `lightingAutomation` renamed to [stageOrchestration](https://github.com/superLimitBreak/stageOrchestration)
-    * Has an eventline (sub triggers timed with lights)
+* [stageOrchestration](https://github.com/superLimitBreak/stageOrchestration) - rename of `lightingAutomation`
     * Lighting is scripted in `python` and compiled down to binary frames on disk
         * Live reload/render on change
-    * Separate timer/renderer process takes binary frames and sends over network
+    * Media triggers (eventline)
+        * media trigger in same script as lighting
+    * Separate realtime-renderer process takes binary frames off disk + send over network
         * Testable segmented architecture
-    * `python` animation framework - Powerful/composable programmatic expression of lights
+    * [ObjectRelationalMapper](https://github.com/superLimitBreak/stageOrchestration/tree/master/stageOrchestration/lighting/model/devices) for lights
+    * Generic `python` [timeline.py](https://github.com/calaldees/libs/blob/master/python3/calaldees/animation/timeline.py)  - Powerful programmatic animation framework
         * Inspired by other animation frameworks
             * [GreenSock](https://greensock.com/examples-showcases)
         * Overload mathematical operators
@@ -106,18 +114,22 @@ Stage 2 - July 2016 to November 2019
 * [displayTrigger](https://github.com/superLimitBreak/displayTrigger)
     * rewritten in `es6`, `webpack`
     * Multiple displays in one browser instance
-        * `display` be bound to arbitrary `div`
-* [stageViewer](https://github.com/superLimitBreak/stageViewer)
-    * 3D Stage representation with screens and lights - [three.js](https://threejs.org/) CSS3D
-    * Uses `displayTrigger` library to bind screens to 3D scene
-    * `react` timeline with representation of lights
+        * `display` be bound to arbitrary `div`s
+* [stageViewer](https://github.com/superLimitBreak/stageViewer) - (two `es6` components)
+    * 3D Stage representation
+        * [three.js](https://threejs.org/) css3d component
+        * 3D stage, lights, screens
+            * Uses `display` library bound to screens/divs in 3D scene
+    * timeline
+        * `react` component
+        * Visual representation of lights
 * [systemSetup](https://github.com/superLimitBreak/systemSetup)
     * Containerized/Segmented architecture
         * Published [DockerHub](https://cloud.docker.com/u/superlimitbreak/repository/list) containers
     * Sub component repos
-        * [multisocketServer](https://github.com/superLimitBreak/multisocketServer)
-        * [mediatimelineRenderer](https://github.com/superLimitBreak/mediaTimelineRenderer)
-        * [mediaInfoService](https://github.com/superLimitBreak/mediaInfoService)
+        * [multisocketServer](https://github.com/superLimitBreak/multisocketServer) subscription/routing server + self healing clients for `python`/`js`
+        * [mediatimelineRenderer](https://github.com/superLimitBreak/mediaTimelineRenderer) WIP video thumbnails for timeline
+        * [mediaInfoService](https://github.com/superLimitBreak/mediaInfoService) REST API for metadata of media
         * [calaldees/libs](https://github.com/calaldees/libs)
 
 ### Use
