@@ -6,8 +6,8 @@ The tools have continually evolved into a fairly complex tech stack.
 This document chronicles the changes and thought process's that have lead to current system.
 
 
-Stage 0 - Initial problem - July 2014
--------------------------------------
+Stage 0 - Initial problem - 2013
+--------------------------------
 
 ### Problem
 * An live music performance with interactive video game/music
@@ -17,12 +17,13 @@ Stage 0 - Initial problem - July 2014
 * Spacebar at the same time
     * Cuebase
     * vlc
-* [VoteBattle](https://github.com/superLimitBreak/voteBattle/tree/38f058fbb3f221429e9e6967b79543067747d6ce)
-* [Pentatonic Hero](https://github.com/superLimitBreak/pentatonicHero/tree/bd6a873eaaf00717be0ddb58a12eb3cd687c866d)
 
 ### Performance
 * Ayacon July 2013
 * BarCamp Canterbury June 2014
+    * [VoteBattle](https://github.com/superLimitBreak/voteBattle/tree/38f058fbb3f221429e9e6967b79543067747d6ce)
+    * [Pentatonic Hero](https://github.com/superLimitBreak/pentatonicHero/tree/bd6a873eaaf00717be0ddb58a12eb3cd687c866d)
+
 
 
 Stage 1 - October 2014 to September 2015
@@ -63,9 +64,11 @@ Stage 1.5 - October 2015 to July 2016
 
 ### Solution
 * Deprecate PyGame MIDI `trigger` -> Javascript web `trigger` through Chrome MIDI
-* Self-Healing network connections
-* Network bus routing to route to multiple listeners/displays
+* Self-Healing network client connections for websocket and tcp
+* SubscriptionServer
+    * Network bus routing to route messages to multiple listeners/displays
 * Floor prompt subtitle `display`
+    * RaspberyPi 2 with WiFi + monitor
 
 ### Use
 * Minami March 2016
@@ -92,10 +95,10 @@ Stage 2 - July 2016 to November 2019
         * Live reload/render on change
     * Separate timer/renderer process takes binary frames and sends over network
         * Testable segmented architecture
-    * Powerful/composable programmatic expression of lights
+    * `python` animation framework - Powerful/composable programmatic expression of lights
         * Inspired by other animation frameworks
             * [GreenSock](https://greensock.com/examples-showcases)
-        * Overload mathmatical operators
+        * Overload mathematical operators
             * `+`
             * `&`
             * `*`
@@ -105,11 +108,11 @@ Stage 2 - July 2016 to November 2019
     * Multiple displays in one browser instance
         * `display` be bound to arbitrary `div`
 * [stageViewer](https://github.com/superLimitBreak/stageViewer)
-    * 3D Stage representation with screens and lights [three.js](https://threejs.org/) CSS3D
+    * 3D Stage representation with screens and lights - [three.js](https://threejs.org/) CSS3D
     * Uses `displayTrigger` library to bind screens to 3D scene
     * `react` timeline with representation of lights
 * [systemSetup](https://github.com/superLimitBreak/systemSetup)
-    * Segmented architecture
+    * Containerized/Segmented architecture
         * Published [DockerHub](https://cloud.docker.com/u/superlimitbreak/repository/list) containers
     * Sub component repos
         * [multisocketServer](https://github.com/superLimitBreak/multisocketServer)
