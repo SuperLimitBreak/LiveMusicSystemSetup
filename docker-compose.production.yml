@@ -1,6 +1,35 @@
 version: '3.6'
 
+# A subset of containers for production setup
+# Use prebuilt containers from docker-hub
+# No support for
+#    `stageViewer`
+#    live reloading
+
+# Currently not functional - need to fix:
+#   displaytrigger:nginx:subscription_bridge and mediainfo_service requirements
+#   stageOrchestration - requires mediainfo_service
+
 services:
 
+  displaytrigger:
+    image: superlimitbreak/displaytrigger:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ${PATH_HOST_media}:/srv/media/:ro
+
+  subscriptionserver:
+    image: superlimitbreak/subscriptionserver:latest
+    ports:
+      - "9872:9872"
+      - "9873:9873"
+
   stageorchestration:
-    command: --config config.docker.yaml --displaytrigger_host subscriptionserver
+    image: superlimitbreak/stageorchestration:latest
+    links:
+      - subscriptionserver
+    command: [
+      '--config=config.docker.yaml',
+      '--displaytrigger_host=subscriptionserver',
+    ]
