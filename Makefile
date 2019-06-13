@@ -8,11 +8,12 @@ DOCKER_BASE_IMAGES=alpine nginx:alpine node:alpine python:alpine jrottenberg/ffm
 DOCKER_BUILD_VERSION=latest
 DOCKER_PACKAGE=superlimitbreak
 DOCKER_IMAGE_DISPLAYTRIGGER=${DOCKER_PACKAGE}/displaytrigger:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION=${DOCKER_PACKAGE}/displaytrigger:production
 DOCKER_IMAGE_MEDIAINFOSERVICE=${DOCKER_PACKAGE}/mediainfoservice:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_MEDIATIMELINERENDERER=${DOCKER_PACKAGE}/mediatimelinerenderer:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_SUBSCRIPTIONSERVER=${DOCKER_PACKAGE}/subscriptionserver:${DOCKER_BUILD_VERSION}
 DOCKER_IMAGE_STAGEORCHESTRATION=${DOCKER_PACKAGE}/stageorchestration:${DOCKER_BUILD_VERSION}
-DOCKER_IMAGES=${DOCKER_IMAGE_DISPLAYTRIGGER} ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} ${DOCKER_IMAGE_STAGEORCHESTRATION} ${DOCKER_IMAGE_MEDIATIMELINERENDERER}
+DOCKER_IMAGES=${DOCKER_IMAGE_DISPLAYTRIGGER} ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} ${DOCKER_IMAGE_STAGEORCHESTRATION} ${DOCKER_IMAGE_MEDIATIMELINERENDERER} ${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION}
 
 
 .PHONY: help
@@ -119,6 +120,7 @@ build: install ${ROOT_FOLDER}/.dockerignore
 	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
 	${MAKE} build --directory ${ROOT_FOLDER}/stageOrchestration
 	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file displaytrigger.dockerfile ${ROOT_FOLDER}
+	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION} --file displaytrigger.production.dockerfile ./
 	#docker build -t ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} --file ${ROOT_FOLDER}/multisocketServer/server/ ${ROOT_FOLDER}/multisocketServer/server/
 	#docker build -t ${DOCKER_IMAGE_STAGEORCHESTRATION} --file ${ROOT_FOLDER}/stageOrchestration/Dockerfile ${ROOT_FOLDER}/stageOrchestration
 
@@ -147,13 +149,10 @@ pull: clone
 run:
 	docker-compose up
 
-.PHONY: run_local
-run_local: install
-	# TODO - unfinished concept
+.PHONY: run_production
+run_production: install
 	docker-compose \
-		--file ${ROOT_FOLDER}/displayTrigger/server/docker-compose.yml \
-		--file ${ROOT_FOLDER}/stageOrchistration/docker-compose.yml \
-		--file ${ROOT_FOLDER}/stageViewer/docker-compose.yml \
+		--file docker-compose.production.yml \
 		up
 
 # Clean ------------------------------------------------------------------------

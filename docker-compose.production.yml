@@ -13,7 +13,7 @@ version: '3.6'
 services:
 
   displaytrigger:
-    image: superlimitbreak/displaytrigger:latest
+    image: superlimitbreak/displaytrigger:production
     ports:
       - "80:80"
     volumes:
