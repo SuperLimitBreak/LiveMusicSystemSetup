@@ -16,6 +16,8 @@ services:
       #- ${PATH_HOST_media}/stageconfig:/srv/stageconfig/:ro
     links:
       - subscriptionserver
+      - mediainfoservice
+      - stageorchestration
 
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
@@ -66,19 +68,22 @@ services:
     image: superlimitbreak/stageorchestration:latest
     build:
       context: ${ROOT_FOLDER}/stageOrchestration
-    ports:
-      - "23487:23487"
+    #ports:
+    #  - "23487:23487"
+    expose:
+      - 23487
     volumes:
       - ${ROOT_FOLDER}/stageOrchestration/data/sequences:/stageOrchestration/data/sequences/:ro
       #- ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
       #- ${PATH_HOST_media}/stageDescription:/stageOrchestration/data/stageDescription/:ro
     links:
-      - mediainfoservice
+      #- mediainfoservice
       - subscriptionserver
     command: [
       '--config=config.development.yaml',
-      '--displaytrigger_host=subscriptionserver',
-      '--mediainfo_url=http://mediainfoservice:8331',
+      '--subscriptionserver_host=subscriptionserver',
+      '--media_url=http://displaytrigger/media',
+      '--mediainfo_url=http://displaytrigger/mediainfo',
     ]
 
     # TODO: Add udp->websocket bridge?
