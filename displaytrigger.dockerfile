@@ -17,6 +17,8 @@ ARG PATH_BUILD_DISPLAY=build/displayTrigger/display
 ENV PATH_BUILD_DISPLAY=${PATH_BUILD_DISPLAY}
 ARG PATH_BUILD_STAGEVIEWER=build/stageViewer
 ENV PATH_BUILD_STAGEVIEWER=${PATH_BUILD_STAGEVIEWER}
+
+FROM node:alpine as build
 COPY multisocketServer/package.json build/multisocketServer/package.json
 COPY multisocketServer/clients/     build/multisocketServer/clients/
 COPY libs/package.json  build/libs/package.json
@@ -29,12 +31,14 @@ RUN make install --directory ${PATH_BUILD_TRIGGER}
 FROM base as base_display
 COPY displayTrigger/display/package.json ${PATH_BUILD_DISPLAY}/package.json
 RUN npm install --prefix=${PATH_BUILD_DISPLAY} && npm cache clean --prefix=${PATH_BUILD_DISPLAY} --force
+COPY --from=build build/
 RUN npm link build/multisocketServer/ --prefix=${PATH_BUILD_DISPLAY}
 RUN npm link build/libs/              --prefix=${PATH_BUILD_DISPLAY}
 
 FROM base as base_stageViewer
 COPY stageViewer/package.json ${PATH_BUILD_STAGEVIEWER}/package.json
 RUN npm install --prefix=${PATH_BUILD_STAGEVIEWER} && npm cache clean --prefix=${PATH_BUILD_STAGEVIEWER} --force
+COPY --from=build build/
 RUN npm link build/multisocketServer/ --prefix=${PATH_BUILD_STAGEVIEWER}
 RUN npm link build/libs/              --prefix=${PATH_BUILD_STAGEVIEWER}
 
