@@ -17,7 +17,7 @@ services:
     links:
       - subscriptionserver
       - mediainfoservice
-      - stageorchestration
+      #- stageorchestration
 
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
@@ -68,10 +68,10 @@ services:
     image: superlimitbreak/stageorchestration:latest
     build:
       context: ${ROOT_FOLDER}/stageOrchestration
-    #ports:
-    #  - "23487:23487"
-    expose:
-      - 23487
+    ports:
+      - "23487:23487"
+    #expose:
+    #  - 23487
     volumes:
       - ${ROOT_FOLDER}/stageOrchestration/data/sequences:/stageOrchestration/data/sequences/:ro
       #- ${PATH_HOST_media}/stageOrchestrationSequences:/stageOrchestration/data/sequences/:ro
