@@ -149,6 +149,10 @@ pull: clone
 run:
 	docker-compose up
 
+.PHONY: run_displaytrigger
+run_displaytrigger:
+	docker-compose run --rm --service-ports displaytrigger
+
 .PHONY: run_production
 run_production: install
 	docker-compose \
