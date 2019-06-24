@@ -9,3 +9,5 @@
 **/*.egg-info
 **/static/
 **/dist/
+**/*.lock
+**/*-lock.json

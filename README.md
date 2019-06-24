@@ -1,5 +1,5 @@
-systemSetup
-===========
+superLimitBreakSetup
+====================
 
 A repo to build and run the [superLimtBreak.uk](http://superlimitbreak.uk) tech stack.
 

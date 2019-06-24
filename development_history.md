@@ -123,7 +123,7 @@ Stage 2 - July 2016 to November 2019
     * timeline
         * `react` component
         * Visual representation of lights
-* [systemSetup](https://github.com/superLimitBreak/systemSetup)
+* [superLimitBreakSetup](https://github.com/superLimitBreak/superLimitBreakSetup)
     * Containerized/Segmented architecture
         * Published [DockerHub](https://cloud.docker.com/u/superlimitbreak/repository/list) containers
     * Sub component repos
