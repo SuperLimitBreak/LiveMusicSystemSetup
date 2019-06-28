@@ -1,5 +1,4 @@
 ROOT_FOLDER=..
-#PATH_BUILD=_build
 
 REPOS=libs multisocketServer stageOrchestration stageViewer webMidiTools displayTrigger mediaTimelineRenderer mediaInfoService
 #pentatonicHero voteBattle
@@ -36,7 +35,6 @@ help:
 
 .PHONY: install
 install: clone
-	make install --directory ${ROOT_FOLDER}/displayTrigger/trigger/
 
 .PHONY: clone
 clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/multisocketServer ${ROOT_FOLDER}/mediaInfoService ${ROOT_FOLDER}/mediaTimelineRenderer ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
