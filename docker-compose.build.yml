@@ -1,0 +1,28 @@
+version: '3.6'
+
+services:
+
+  displaytrigger:
+    build:
+      context: ${ROOT_FOLDER}
+      dockerfile: systemSetup/displaytrigger.dockerfile
+
+  subscriptionserver:
+    build:
+      context: ${ROOT_FOLDER}/multisocketServer/multisocketServer/server
+
+  subscriptionserver_bridge:
+    build:
+      context: ${ROOT_FOLDER}/multisocketServer/webBridge
+
+  mediainfoservice:
+    build:
+      context: ${ROOT_FOLDER}/mediaInfoService
+
+  mediatimelinerenderer:
+    build:
+      context: ${ROOT_FOLDER}/mediaTimelineRenderer
+
+  stageorchestration:
+    build:
+      context: ${ROOT_FOLDER}/stageOrchestration
