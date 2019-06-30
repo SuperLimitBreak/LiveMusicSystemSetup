@@ -4,9 +4,6 @@ services:
 
   displaytrigger:
     image: superlimitbreak/displaytrigger:latest
-    build:
-      context: ${ROOT_FOLDER}
-      dockerfile: systemSetup/displaytrigger.dockerfile
     ports:
       - "80:80"
     volumes:
@@ -21,8 +18,6 @@ services:
 
   subscriptionserver:
     image: superlimitbreak/subscriptionserver:latest
-    build:
-      context: ${ROOT_FOLDER}/multisocketServer/multisocketServer/server
     ports:
       - "9872:9872"
       - "9873:9873"
@@ -30,8 +25,6 @@ services:
 
   subscriptionserver_bridge:
     image: superlimitbreak/subscriptionserver_bridge:latest
-    build:
-      context: ${ROOT_FOLDER}/multisocketServer/webBridge
     expose:
       - 10794
     links:
@@ -43,8 +36,6 @@ services:
 
   mediainfoservice:
     image: superlimitbreak/mediainfoservice:latest
-    build:
-      context: ${ROOT_FOLDER}/mediaInfoService
     volumes:
       - ${PATH_HOST_media}:/srv/media:ro
     expose:
@@ -55,8 +46,6 @@ services:
 
   mediatimelinerenderer:
     image: superlimitbreak/mediatimelinerenderer:latest
-    build:
-      context: ${ROOT_FOLDER}/mediaTimelineRenderer
     volumes:
       - ${PATH_HOST_media}:/srv/media
     command: [
@@ -66,8 +55,6 @@ services:
 
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
-    build:
-      context: ${ROOT_FOLDER}/stageOrchestration
     ports:
       - "23487:23487"
     #expose:
