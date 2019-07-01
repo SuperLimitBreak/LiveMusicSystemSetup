@@ -147,9 +147,24 @@ pull: clone
 run:
 	docker-compose up
 
-.PHONY: run_displaytrigger
-run_displaytrigger:
-	docker-compose run --rm --service-ports displaytrigger
+.PHONY: run_local
+run_local:
+	docker-compose \
+		--file docker-compose.yml \
+		--file docker-compose.local.yml \
+		up
+
+# Run bare displaytrigger/multisocketserver without other containers
+#  often used when developing stageOrcheatration locally
+.PHONY: run_displaytrigger_local
+run_displaytrigger_local:
+	docker-compose \
+		--file docker-compose.yml \
+		--file docker-compose.local.yml \
+		run \
+		--rm \
+		--service-ports \
+		displaytrigger
 
 .PHONY: run_production
 run_production: install

@@ -1,0 +1,14 @@
+version: '3.6'
+
+services:
+
+  displaytrigger:
+    volumes:
+      - ${PATH_HOST_media}:/srv/media/:ro
+      - ${ROOT_FOLDER}/displayTrigger/eventmap:/srv/eventmap/:ro
+      #- ${PATH_HOST_media}/eventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
+      #- ${PATH_HOST_media}/stageconfig:/srv/stageconfig/:ro
+
+  stageorchestration:
+    volumes:
+      - ${ROOT_FOLDER}/stageOrchestration/data/sequences:/stageOrchestration/data/sequences/:ro
