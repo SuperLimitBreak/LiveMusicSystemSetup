@@ -32,4 +32,6 @@ services:
     command: [
       '--config=config.docker.yaml',
       '--displaytrigger_host=subscriptionserver',
+      '--timeoffset_lights_seconds=${STAGEORCHESTRATION_timeoffset_lights_seconds}',
+      '--timeoffset_media_seconds=${STAGEORCHESTRATION_timeoffset_media_seconds}',
     ]

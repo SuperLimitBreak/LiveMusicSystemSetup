@@ -71,6 +71,8 @@ services:
       '--subscriptionserver_host=subscriptionserver',
       '--media_url=http://displaytrigger/media',
       '--mediainfo_url=http://displaytrigger/mediainfo',
+      '--timeoffset_lights_seconds=${STAGEORCHESTRATION_timeoffset_lights_seconds}',
+      '--timeoffset_media_seconds=${STAGEORCHESTRATION_timeoffset_media_seconds}',
     ]
 
     # TODO: Add udp->websocket bridge?

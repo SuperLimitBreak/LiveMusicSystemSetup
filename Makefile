@@ -3,7 +3,7 @@ ROOT_FOLDER=..
 REPOS=libs multisocketServer stageOrchestration stageViewer webMidiTools displayTrigger mediaTimelineRenderer mediaInfoService
 #pentatonicHero voteBattle
 
-DOCKER_BASE_IMAGES=alpine nginx:alpine node:alpine python:alpine jrottenberg/ffmpeg
+DOCKER_BASE_IMAGES=alpine nginx:alpine node:alpine python:alpine
 DOCKER_BUILD_VERSION=latest
 DOCKER_PACKAGE=superlimitbreak
 DOCKER_IMAGE_DISPLAYTRIGGER=${DOCKER_PACKAGE}/displaytrigger:${DOCKER_BUILD_VERSION}
