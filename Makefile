@@ -161,9 +161,8 @@ run_displaytrigger_local:
 	docker-compose \
 		--file docker-compose.yml \
 		--file docker-compose.local.yml \
-		run \
-		--rm \
-		--service-ports \
+		up \
+		--exit-code-from displaytrigger \
 		displaytrigger
 
 .PHONY: run_production

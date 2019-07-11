@@ -8,6 +8,7 @@ services:
       - ${ROOT_FOLDER}/displayTrigger/eventmap:/srv/eventmap/:ro
       #- ${PATH_HOST_media}/eventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
       #- ${PATH_HOST_media}/stageconfig:/srv/stageconfig/:ro
+      - ${ROOT_FOLDER}/stageViewer/stageconfig:/srv/stageconfig/:ro
 
   stageorchestration:
     volumes:
