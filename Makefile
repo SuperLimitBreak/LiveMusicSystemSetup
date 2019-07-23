@@ -166,7 +166,7 @@ run_displaytrigger_local:
 		displaytrigger
 
 .PHONY: run_production
-run_production: install
+run_production:
 	docker-compose \
 		--file docker-compose.production.yml \
 		up
