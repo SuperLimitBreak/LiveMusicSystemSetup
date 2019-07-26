@@ -171,6 +171,17 @@ run_production:
 		--file docker-compose.production.yml \
 		up
 
+
+# Cloc -------------------------------------------------------------------------
+
+.PHONY: cloc
+cloc:
+	for REPO in ${REPOS}; do\
+		echo "$$REPO" ;\
+		${MAKE} cloc --directory ${ROOT_FOLDER}/$$REPO ;\
+	done
+
+
 # Clean ------------------------------------------------------------------------
 
 .PHONY: clean_repos
