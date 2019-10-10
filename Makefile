@@ -137,8 +137,8 @@ build: install ${ROOT_FOLDER}/.dockerignore
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaTimelineRenderer
 	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
 	${MAKE} build --directory ${ROOT_FOLDER}/stageOrchestration
-	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file displaytrigger.dockerfile ${ROOT_FOLDER}
-	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION} --file displaytrigger.production.dockerfile ./
+	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file Dockerfile ${ROOT_FOLDER}
+	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION} --file Dockerfile.production ./
 	#docker build -t ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} --file ${ROOT_FOLDER}/multisocketServer/server/ ${ROOT_FOLDER}/multisocketServer/server/
 	#docker build -t ${DOCKER_IMAGE_STAGEORCHESTRATION} --file ${ROOT_FOLDER}/stageOrchestration/Dockerfile ${ROOT_FOLDER}/stageOrchestration
 
@@ -172,7 +172,8 @@ run_local:
 	docker-compose \
 		--file docker-compose.yml \
 		--file docker-compose.local.yml \
-		up
+		up \
+		--abort-on-container-exit \
 
 # Run bare displaytrigger/multisocketserver without other containers
 #  often used when developing stageOrcheatration locally

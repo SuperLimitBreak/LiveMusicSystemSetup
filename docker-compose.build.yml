@@ -5,7 +5,6 @@ services:
   displaytrigger:
     build:
       context: ${ROOT_FOLDER}
-      dockerfile: systemSetup/displaytrigger.dockerfile
 
   subscriptionserver:
     build:
