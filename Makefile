@@ -192,6 +192,15 @@ run_production:
 		--file docker-compose.production.yml \
 		up
 
+.PHONY: run_production_local
+run_production_local:
+	# STAGEORCHESTRATION_timeoffset_media_seconds='0.06465517241379311' make run_production_local
+	docker-compose \
+		--file docker-compose.production.yml \
+		--file docker-compose.local.yml \
+		up \
+		--abort-on-container-exit
+
 
 # Cloc -------------------------------------------------------------------------
 
