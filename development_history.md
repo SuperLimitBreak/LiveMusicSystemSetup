@@ -28,7 +28,7 @@ Stage 0 - Initial problem - 2013
 Stage 1 - October 2014 to September 2015
 ----------------------------------------
 
-### Problem
+### Problems with Stage 0
 * Don't trigger things by human interaction. Trigger them automatically.
 * Could we trigger/drive stage lights in time to our music without a lighting engineer?
 
@@ -59,7 +59,7 @@ If we could setup a virtual midi port that then `trigger`'s a message to be sent
 Stage 1.5 - October 2015 to July 2016
 -------------------------------------
 
-### Problem
+### Problem with Stage 1
 * pygame MIDI `trigger` was a pain to constantly deploy to the music (Cuebase) machine (as it had no internet connection)
 * Single message bus for all `displays`. All messages went to every connected device.
 * If connections dropped we had to have access to computers/terminals to fix it
@@ -81,7 +81,7 @@ Stage 1.5 - October 2015 to July 2016
 Stage 2 - July 2016 to November 2019
 ------------------------------------
 
-### Problems
+### Problems with Stage 1.5
 * `lightingAutomation` scripting extremely limited
     * Could only tween entire lighting rig state to another state
     * Overly complex nested anonymous function complexity every frame (too complex to test/debug properly)
@@ -115,6 +115,11 @@ Stage 2 - July 2016 to November 2019
     * rewritten in `es6`, `webpack`
     * Multiple displays in one browser instance
         * `display` be bound to arbitrary `div`s
+    * Greensock Animation Project engine for animations
+        * Allows timeline seek to set animation state
+    * Pixi.js Particle Engine
+        * Realtime, Rain, Fire, Firework effects
+            * Can control state with GSAP to allow rain to intensify
 * [stageViewer](https://github.com/superLimitBreak/stageViewer) - (two `es6` components)
     * 3D Stage representation
         * [three.js](https://threejs.org/) css3d component
@@ -135,4 +140,35 @@ Stage 2 - July 2016 to November 2019
 ### Use
 * `displayTrigger` used at [Hibannacon 2018](https://twitter.com/SuperLimitBreak/status/1059123513578135552)
 * Tech preview demoed in [BarCamp 2019](http://barcampcanterbury.com) June
-* Planned [Hibanacon 2019](https://www.hibanacon.co.uk/) November
+* [Hibanacon 2019](https://www.hibanacon.co.uk/) November
+
+
+Stage 3 - November 2019 to present
+----------------------------------
+
+### Problems with Stage 2.0
+* Syncing with the cuebase music machine is still fiddly
+    * Individual triggers are difficult to time
+        * We could not trigger accurately with a _2 bar_ count-in as we have overlapping tracks where the clicktrack was just an audio sample
+        * The assumption of 2 bar countin was now invalid and defeated the purpose of automatic precaching of videos
+* Difference in production `single_triggers` to development `continuous_triggers` (for visualizer)
+* No ability to seek in cuebase project to visualize timing
+* Calibrating sync offsets for visulisations is fiddley, complex and time consuming
+* No _live_ control of lights
+    * We did not implement that feature from `lightingAutomation`
+* `multisocetServer` was saturated with messagegs at 30fps with text floating point number number in plain text json
+    * each frame was hundreds of kb
+* `multisocetServer` was unreliable and messages would get lost
+    * The json message system manually joined multiple messages/packets strings and scanned for `}}` to denote end of messages. It was a mess.
+
+### Solution
+* The cuebase machine broadcasts timecode state continuously
+    * SMTPE (protocol designed to sync with analog gear)
+    * We can seek in cuebase project
+* `timecode_to_track_router` translates timecode to a track position
+    * 
+* Move to `msgpack` for messaging
+* Move to a stable profetional message bus
+
+### Use
+* _unknown_
