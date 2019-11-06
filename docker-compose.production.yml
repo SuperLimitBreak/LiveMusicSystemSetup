@@ -24,7 +24,7 @@ services:
     ports:
       - "9872:9872"
       - "9873:9873"
-    #command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # for debuging
+    command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # TEMP!!! REMOVE!!!
 
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest
@@ -35,4 +35,5 @@ services:
       '--subscriptionserver_host=subscriptionserver',
       '--timeoffset_lights_seconds=${STAGEORCHESTRATION_timeoffset_lights_seconds}',
       '--timeoffset_media_seconds=${STAGEORCHESTRATION_timeoffset_media_seconds}',
+      '--scaninterval=1',   # TEMP!! REMOVE!!!
     ]

@@ -194,7 +194,8 @@ run_production:
 
 .PHONY: run_production_local
 run_production_local:
-	# STAGEORCHESTRATION_timeoffset_media_seconds='0.06465517241379311' make run_production_local
+	# TEMP!! Remove hard offset!
+	STAGEORCHESTRATION_timeoffset_media_seconds='0.06465517241379311' \
 	docker-compose \
 		--file docker-compose.production.yml \
 		--file docker-compose.local.yml \
