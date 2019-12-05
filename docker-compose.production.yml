@@ -20,7 +20,7 @@ services:
       - ${PATH_HOST_media}:/srv/media/:ro
 
   subscriptionserver:
-    image: superlimitbreak/subscriptionserver:latest
+    image: superlimitbreak/subscriptionserver2:latest
     ports:
       - "9872:9872"
       - "9873:9873"

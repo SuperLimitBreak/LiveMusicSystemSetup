@@ -24,17 +24,19 @@ COPY multisocketServer/clients/     build/multisocketServer/clients/
 COPY libs/package.json  build/libs/package.json
 COPY libs/es6/          build/libs/es6/
 
-FROM base as trigger
-COPY --from=build build build
-COPY displayTrigger/trigger/ ${PATH_BUILD_TRIGGER}
-RUN make install --directory ${PATH_BUILD_TRIGGER}
-
 FROM base as base_display
 COPY displayTrigger/display/package.json ${PATH_BUILD_DISPLAY}/package.json
 RUN npm install --prefix=${PATH_BUILD_DISPLAY} && npm cache clean --prefix=${PATH_BUILD_DISPLAY} --force
 COPY --from=build build build
 RUN npm link build/multisocketServer/ --prefix=${PATH_BUILD_DISPLAY}
 RUN npm link build/libs/              --prefix=${PATH_BUILD_DISPLAY}
+
+FROM base as base_trigger
+COPY displayTrigger/trigger/package.json ${PATH_BUILD_TRIGGER}/package.json
+RUN npm install --prefix=${PATH_BUILD_TRIGGER} && npm cache clean --prefix=${PATH_BUILD_TRIGGER} --force
+COPY --from=build build build
+RUN npm link build/multisocketServer/ --prefix=${PATH_BUILD_TRIGGER}
+RUN npm link build/libs/              --prefix=${PATH_BUILD_TRIGGER}
 
 FROM base as base_stageViewer
 COPY stageViewer/package.json ${PATH_BUILD_STAGEVIEWER}/package.json
@@ -43,10 +45,19 @@ COPY --from=build build build
 RUN npm link build/multisocketServer/ --prefix=${PATH_BUILD_STAGEVIEWER}
 RUN npm link build/libs/              --prefix=${PATH_BUILD_STAGEVIEWER}
 
-
 FROM base_display as display
 COPY displayTrigger/display/ ${PATH_BUILD_DISPLAY}
 RUN npm run build --prefix=${PATH_BUILD_DISPLAY}
+
+FROM base_trigger as trigger
+COPY displayTrigger/trigger/ ${PATH_BUILD_TRIGGER}
+COPY \
+    displayTrigger/display/.babelrc \
+    displayTrigger/display/.editorconfig \
+    displayTrigger/display/.eslintrc \
+    displayTrigger/display/webpack.config.base.js \
+${PATH_BUILD_TRIGGER}
+RUN npm run build --prefix=${PATH_BUILD_TRIGGER}
 
 FROM base_stageViewer as stageViewer
 # humm .. can we not just copy display/static/?

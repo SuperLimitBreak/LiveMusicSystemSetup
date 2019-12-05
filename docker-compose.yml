@@ -12,27 +12,27 @@ services:
       #- ${PATH_HOST_media}/eventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
       #- ${PATH_HOST_media}/stageconfig:/srv/stageconfig/:ro
     links:
-      - subscriptionserver_bridge
+      - subscriptionserver  # temp
+      #- subscriptionserver_bridge
       - mediainfoservice
       #- stageorchestration
 
   subscriptionserver:
-    image: superlimitbreak/subscriptionserver:latest
+    image: superlimitbreak/subscriptionserver2:latest
     ports:
-      - "9872:9872"
       - "9873:9873"
     #command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # for debuging
 
-  subscriptionserver_bridge:
-    image: superlimitbreak/subscriptionserver_bridge:latest
-    expose:
-      - 10794
-    links:
-       - subscriptionserver
-    command: [
-      'subscriptionserver:9872',
-      '--port', '10794',
-    ]
+  # subscriptionserver_bridge:  # temp
+  #   image: superlimitbreak/subscriptionserver_bridge:latest
+  #   expose:
+  #     - 10794
+  #   links:
+  #      - subscriptionserver
+  #   command: [
+  #     'subscriptionserver:9872',
+  #     '--port', '10794',
+  #   ]
 
   mediainfoservice:
     image: superlimitbreak/mediainfoservice:latest
