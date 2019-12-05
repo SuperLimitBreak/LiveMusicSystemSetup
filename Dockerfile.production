@@ -1,4 +1,5 @@
-FROM superlimitbreak/displaytrigger:latest
+ARG DISPLAYTRIGGER_IMAGENAME=superlimitbreak/displaytrigger:latest
+FROM ${DISPLAYTRIGGER_IMAGENAME}
 
 RUN \
     sed -i '/subscriptionserver_bridge/d' /etc/nginx/nginx.conf && \

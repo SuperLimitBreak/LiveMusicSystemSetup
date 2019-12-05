@@ -10,7 +10,6 @@ REPOS=\
 	displayTrigger \
 	stageViewer \
 
-#pentatonicHero voteBattle
 
 DOCKER_BASE_IMAGES=\
 	alpine \
@@ -39,27 +38,30 @@ DOCKER_IMAGES=\
 .PHONY: help
 help:
 	# superLimitBreak system setup
-	#  - build            - Build docker images
+	#  - build            - clone-repos/build docker images
 	#  - push             - Push docker images to dockerhub
 	#  - run              - Use docker-compose to run from docker images
-	#  - run_local        - Use docker-compose to run from local source
+	#  - run_local        - Use docker-compose to run from local data
 	#  - clean            - Delete all repos and docker images
 	# helpers
 	#  - clone            - checkout all repos
-	#  - install          - clone and install/setup all repos
 	#  - pull             - `git pull` all repos
 	#
 	# REPOS="${REPOS}"
 	# IMAGES=""${DOCKER_IMAGES}""
 
-# Clone/Install ----------------------------------------------------------------
-
-.PHONY: install
-install: clone
+# Clone ------------------------------------------------------------------------
 
 .PHONY: clone
-clone: ${ROOT_FOLDER}/libs ${ROOT_FOLDER}/multisocketServer ${ROOT_FOLDER}/mediaInfoService ${ROOT_FOLDER}/mediaTimelineRenderer ${ROOT_FOLDER}/stageOrchestration ${ROOT_FOLDER}/stageViewer ${ROOT_FOLDER}/webMidiTools ${ROOT_FOLDER}/displayTrigger
-#clone: libs displayTrigger stageOrchestration stageViewer webMidiTools
+clone: \
+	${ROOT_FOLDER}/libs \
+	${ROOT_FOLDER}/multisocketServer \
+	${ROOT_FOLDER}/mediaInfoService \
+	${ROOT_FOLDER}/mediaTimelineRenderer \
+	${ROOT_FOLDER}/stageOrchestration \
+	${ROOT_FOLDER}/stageViewer \
+	${ROOT_FOLDER}/webMidiTools \
+	${ROOT_FOLDER}/displayTrigger \
 
 ${ROOT_FOLDER}/.dockerignore:
 	cp .dockerignore ${ROOT_FOLDER}/
@@ -85,63 +87,56 @@ multisocketServer: ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/multisocketServer:
 	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/multisocketServer.git
 
-displayTrigger: ${ROOT_FOLDER}/$@
-	ln -s ${ROOT_FOLDER}/$@
-${ROOT_FOLDER}/displayTrigger:
-	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/displayTrigger.git
-	#make install --directory ${ROOT_FOLDER}/$@
-
 stageOrchestration: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/stageOrchestration:
 	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/stageOrchestration.git
-	#make install --directory ${ROOT_FOLDER}/$@
+
+displayTrigger: ${ROOT_FOLDER}/$@
+	ln -s ${ROOT_FOLDER}/$@
+${ROOT_FOLDER}/displayTrigger:
+	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/displayTrigger.git
 
 stageViewer: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/stageViewer:
 	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/stageViewer.git
-	#make install --directory ${ROOT_FOLDER}/$@
 
 webMidiTools: ${ROOT_FOLDER}/$@
 	ln -s ${ROOT_FOLDER}/$@
 ${ROOT_FOLDER}/webMidiTools:
 	cd ${ROOT_FOLDER} ; git clone https://github.com/superLimitBreak/webMidiTools.git
 
-#pentatonicHero:
-#	git clone https://github.com/SuperLimitBreak/pentatonicHero.git
-
-#voteBattle:
-#	git clone https://github.com/SuperLimitBreak/voteBattle.git
-#	cd voteBattle/server; make install
-
 
 # docker-compose.yml builder ---------------------------------------------------
-
-config_merger.py:
-	curl https://raw.githubusercontent.com/calaldees/config-merger/master/config_merger.py -o $@
-
 # Build hybrid docker-compose.yml
 # UNFINISHED!
-DOCKER_COMPOSE_PATHS=displayTrigger/server stageOrchistration stageViewer
-docker-compose.yml: config_merger.py
-	for PATH_DOCKER_COMPOSE in ${DOCKER_COMPOSE_PATHS}; do\
-		${ROOT_FOLDER}/$$PATH_DOCKER_COMPOSE ;\
-	done
+# config_merger.py:
+# 	curl https://raw.githubusercontent.com/calaldees/config-merger/master/config_merger.py -o $@
+# DOCKER_COMPOSE_PATHS=displayTrigger/server stageOrchistration stageViewer
+# docker-compose.yml: config_merger.py
+# 	for PATH_DOCKER_COMPOSE in ${DOCKER_COMPOSE_PATHS}; do\
+# 		${ROOT_FOLDER}/$$PATH_DOCKER_COMPOSE ;\
+# 	done
 
 
 # Build ------------------------------------------------------------------------
 
 .PHONY: build
-build: install ${ROOT_FOLDER}/.dockerignore
+build: clone ${ROOT_FOLDER}/.dockerignore
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaInfoService
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaTimelineRenderer
 	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
 	${MAKE} build --directory ${ROOT_FOLDER}/stageOrchestration
-	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER} --file Dockerfile ${ROOT_FOLDER}
-	docker build -t ${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION} --file Dockerfile.production ./
-	#docker build -t ${DOCKER_IMAGE_SUBSCRIPTIONSERVER} --file ${ROOT_FOLDER}/multisocketServer/server/ ${ROOT_FOLDER}/multisocketServer/server/
-	#docker build -t ${DOCKER_IMAGE_STAGEORCHESTRATION} --file ${ROOT_FOLDER}/stageOrchestration/Dockerfile ${ROOT_FOLDER}/stageOrchestration
+	docker build \
+		-t ${DOCKER_IMAGE_DISPLAYTRIGGER} \
+		--file Dockerfile \
+		${ROOT_FOLDER}
+	docker build \
+		-t ${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION} \
+		--file Dockerfile.production \
+		--build-arg DISPLAYTRIGGER_IMAGENAME=${DOCKER_IMAGE_DISPLAYTRIGGER} \
+		./
 
 .PHONY: push
 push:
