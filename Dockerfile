@@ -56,7 +56,7 @@ COPY \
     displayTrigger/display/.editorconfig \
     displayTrigger/display/.eslintrc \
     displayTrigger/display/webpack.config.base.js \
-${PATH_BUILD_TRIGGER}
+${PATH_BUILD_TRIGGER}/
 RUN npm run build --prefix=${PATH_BUILD_TRIGGER}
 
 FROM base_stageViewer as stageViewer
