@@ -22,9 +22,7 @@ services:
   subscriptionserver:
     image: superlimitbreak/subscriptionserver2:latest
     ports:
-      - "9872:9872"
       - "9873:9873"
-    command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # TEMP!!! REMOVE!!!
 
   stageorchestration:
     image: superlimitbreak/stageorchestration:latest

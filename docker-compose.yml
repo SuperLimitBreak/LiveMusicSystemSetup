@@ -21,7 +21,7 @@ services:
     image: superlimitbreak/subscriptionserver2:latest
     ports:
       - "9873:9873"
-    #command: --tcp_port 9872 --websocket_port 9873 --log_level 10  # for debuging
+    #command: --log_level 10  # for debuging
 
   # subscriptionserver_bridge:  # temp
   #   image: superlimitbreak/subscriptionserver_bridge:latest
