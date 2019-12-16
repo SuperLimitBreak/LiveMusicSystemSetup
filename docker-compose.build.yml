@@ -5,10 +5,11 @@ services:
   displaytrigger:
     build:
       context: ${ROOT_FOLDER}
+      dockerfile: ${PWD}/Dockerfile
 
   subscriptionserver:
     build:
-      context: ${ROOT_FOLDER}/multisocketServer/subscriptionServer2/server
+      context: ${ROOT_FOLDER}/multisocketServer/subscriptionServer2
 
   subscriptionserver_bridge:
     build:

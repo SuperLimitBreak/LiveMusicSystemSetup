@@ -124,6 +124,11 @@ ${ROOT_FOLDER}/webMidiTools:
 
 .PHONY: build
 build: clone ${ROOT_FOLDER}/.dockerignore
+	docker-compose \
+		--file docker-compose.yml \
+		--file docker-compose.build.yml \
+		build
+_build:
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaInfoService
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaTimelineRenderer
 	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
@@ -137,6 +142,10 @@ build: clone ${ROOT_FOLDER}/.dockerignore
 		--file Dockerfile.production \
 		--build-arg DISPLAYTRIGGER_IMAGENAME=${DOCKER_IMAGE_DISPLAYTRIGGER} \
 		./
+#build: clone ${ROOT_FOLDER}/.dockerignore
+#	docker-compose build --file docker-compose.yml --file docker-compose.build.yml
+#push:
+# 	docker-compose push --file docker-compose.yml --file docker-compose.build.yml
 
 .PHONY: push
 push:

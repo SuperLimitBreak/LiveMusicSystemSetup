@@ -68,7 +68,7 @@ services:
       - subscriptionserver
     command: [
       '--config=config.development.yaml',
-      '--subscriptionserver_host=subscriptionserver',
+      '--subscriptionserver_uri=ws://subscriptionserver:9873',
       '--media_url=http://displaytrigger/media',
       '--mediainfo_url=http://displaytrigger/mediainfo',
       '--timeoffset_lights_seconds=${STAGEORCHESTRATION_timeoffset_lights_seconds}',
