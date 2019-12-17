@@ -1,4 +1,4 @@
-version: '3.6'
+version: '3.7'
 
 # A subset of containers for production setup
 # Use prebuilt containers from docker-hub
@@ -14,6 +14,10 @@ services:
 
   displaytrigger:
     image: superlimitbreak/displaytrigger:production
+    build:
+      dockerfile: Dockerfile.production
+      args:
+        DISPLAYTRIGGER_IMAGENAME: ${DOCKER_IMAGE_DISPLAYTRIGGER}
     ports:
       - "80:80"
     volumes:

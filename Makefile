@@ -126,9 +126,13 @@ ${ROOT_FOLDER}/webMidiTools:
 build: clone ${ROOT_FOLDER}/.dockerignore
 	docker-compose \
 		--file docker-compose.yml \
-		--file docker-compose.build.yml \
 		build
-_build:
+	docker-compose \
+		--file docker-compose.yml \
+		--file docker-compose.production.yml \
+		build
+		displaytrigger
+_build_manual: clone ${ROOT_FOLDER}/.dockerignore
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaInfoService
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaTimelineRenderer
 	${MAKE} build --directory ${ROOT_FOLDER}/multisocketServer
@@ -149,6 +153,9 @@ _build:
 
 .PHONY: push
 push:
+	docker-compose push
+	# TODO: docker-compose push prodction?
+_push_manual:
 	# TODO: call sub Makefiles?
 	for DOCKER_IMAGE in ${DOCKER_IMAGES}; do\
 		docker push $$DOCKER_IMAGE ;\
