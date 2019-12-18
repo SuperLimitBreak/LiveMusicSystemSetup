@@ -28,18 +28,18 @@ services:
       - "9873:9873"
     #command: --log_level 10  # for debuging
 
-  # subscriptionserver_bridge:  # temp
-  #   image: superlimitbreak/subscriptionserver_bridge:latest
-  #   build:
-  #     context: ${ROOT_FOLDER}/multisocketServer/webBridge
-  #   expose:
-  #     - 10794
-  #   links:
-  #      - subscriptionserver
-  #   command: [
-  #     'subscriptionserver:9872',
-  #     '--port', '10794',
-  #   ]
+  subscriptionserver_bridge:
+    image: superlimitbreak/subscriptionserver_bridge:latest
+    build:
+      context: ${ROOT_FOLDER}/multisocketServer/webBridge
+    expose:
+      - 10794
+    links:
+       - subscriptionserver
+    command: [
+      'ws://subscriptionserver:9873',
+      '--port', '10794',
+    ]
 
   mediainfoservice:
     image: superlimitbreak/mediainfoservice:latest
