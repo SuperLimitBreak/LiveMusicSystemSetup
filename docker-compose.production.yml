@@ -15,9 +15,9 @@ services:
   displaytrigger:
     image: superlimitbreak/displaytrigger:production
     build:
-      dockerfile: Dockerfile.production
+      dockerfile: ${PWD}/Dockerfile.production
       args:
-        DISPLAYTRIGGER_IMAGENAME: ${DOCKER_IMAGE_DISPLAYTRIGGER}
+        DISPLAYTRIGGER_IMAGENAME: superlimitbreak/displaytrigger:latest
     ports:
       - "80:80"
     volumes:

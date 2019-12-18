@@ -130,7 +130,7 @@ build: clone ${ROOT_FOLDER}/.dockerignore
 	docker-compose \
 		--file docker-compose.yml \
 		--file docker-compose.production.yml \
-		build
+		build \
 		displaytrigger
 _build_manual: clone ${ROOT_FOLDER}/.dockerignore
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaInfoService
@@ -195,8 +195,12 @@ run_displaytrigger_local:
 		--file docker-compose.yml \
 		--file docker-compose.local.yml \
 		up \
-		--exit-code-from displaytrigger \
-		displaytrigger
+		--abort-on-container-exit \
+		displaytrigger \
+		subscriptionserver \
+		mediainfoservice
+		#--exit-code-from displaytrigger \
+		#displaytrigger
 
 .PHONY: run_production
 run_production:
@@ -206,8 +210,7 @@ run_production:
 
 .PHONY: run_production_local
 run_production_local:
-	# TEMP!! Remove hard offset!
-	STAGEORCHESTRATION_timeoffset_media_seconds='0.06465517241379311' \
+	STAGEORCHESTRATION_timeoffset_media_seconds='0.00' \
 	docker-compose \
 		--file docker-compose.production.yml \
 		--file docker-compose.local.yml \
