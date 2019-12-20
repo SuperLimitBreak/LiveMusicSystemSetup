@@ -15,8 +15,8 @@ services:
       #- ${PATH_HOST_media}/eventmap:/srv/eventmap/:ro  # Attempt to simplify the deployment. eventmap .json files are in the root of media
       #- ${PATH_HOST_media}/stageconfig:/srv/stageconfig/:ro
     links:
-      - subscriptionserver  # temp
-      #- subscriptionserver_bridge
+      #- subscriptionserver  # temp
+      - subscriptionserver_bridge
       - mediainfoservice
       #- stageorchestration
 
@@ -32,13 +32,15 @@ services:
     image: superlimitbreak/subscriptionserver_bridge:latest
     build:
       context: ${ROOT_FOLDER}/multisocketServer/webBridge
+      args:
+        PORT: 10794
     expose:
       - 10794
     links:
        - subscriptionserver
     command: [
       'ws://subscriptionserver:9873',
-      '--port', '10794',
+      '--port', '10794',  # wanted this to part of base dockerfile, but no. cant use environment vars in entrypoints
     ]
 
   mediainfoservice:

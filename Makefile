@@ -128,7 +128,6 @@ build: clone ${ROOT_FOLDER}/.dockerignore
 		--file docker-compose.yml \
 		build
 	docker-compose \
-		--file docker-compose.yml \
 		--file docker-compose.production.yml \
 		build \
 		displaytrigger

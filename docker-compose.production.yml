@@ -15,6 +15,7 @@ services:
   displaytrigger:
     image: superlimitbreak/displaytrigger:production
     build:
+      context: ./
       dockerfile: ${PWD}/Dockerfile.production
       args:
         DISPLAYTRIGGER_IMAGENAME: superlimitbreak/displaytrigger:latest
@@ -34,8 +35,7 @@ services:
       - subscriptionserver
     command: [
       '--config=config.docker.yaml',
-      '--subscriptionserver_host=subscriptionserver',
+      '--subscriptionserver_uri=ws://subscriptionserver:9873',
       '--timeoffset_lights_seconds=${STAGEORCHESTRATION_timeoffset_lights_seconds}',
       '--timeoffset_media_seconds=${STAGEORCHESTRATION_timeoffset_media_seconds}',
-      '--scaninterval=1',   # TEMP!! REMOVE!!!
     ]
