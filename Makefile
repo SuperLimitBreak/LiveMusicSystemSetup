@@ -11,30 +11,6 @@ REPOS=\
 	stageViewer \
 
 
-DOCKER_BASE_IMAGES=\
-	alpine \
-	nginx:alpine \
-	node:alpine \
-	python:alpine \
-
-# Annoyingly these imagenames must be in sync with the subrepos - consider a single point of truth
-DOCKER_BUILD_VERSION=latest
-DOCKER_PACKAGE=superlimitbreak
-DOCKER_IMAGE_DISPLAYTRIGGER=${DOCKER_PACKAGE}/displaytrigger:${DOCKER_BUILD_VERSION}
-DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION=${DOCKER_PACKAGE}/displaytrigger:production
-DOCKER_IMAGE_MEDIAINFOSERVICE=${DOCKER_PACKAGE}/mediainfoservice:${DOCKER_BUILD_VERSION}
-DOCKER_IMAGE_MEDIATIMELINERENDERER=${DOCKER_PACKAGE}/mediatimelinerenderer:${DOCKER_BUILD_VERSION}
-DOCKER_IMAGE_SUBSCRIPTIONSERVER=${DOCKER_PACKAGE}/subscriptionserver2:${DOCKER_BUILD_VERSION}
-DOCKER_IMAGE_STAGEORCHESTRATION=${DOCKER_PACKAGE}/stageorchestration:${DOCKER_BUILD_VERSION}
-DOCKER_IMAGES=\
-	${DOCKER_IMAGE_SUBSCRIPTIONSERVER} \
-	${DOCKER_IMAGE_MEDIAINFOSERVICE} \
-	${DOCKER_IMAGE_MEDIATIMELINERENDERER} \
-	${DOCKER_IMAGE_STAGEORCHESTRATION} \
-	${DOCKER_IMAGE_DISPLAYTRIGGER} \
-	${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION} \
-
-
 .PHONY: help
 help:
 	# superLimitBreak system setup
@@ -48,7 +24,7 @@ help:
 	#  - pull             - `git pull` all repos
 	#
 	# REPOS="${REPOS}"
-	# IMAGES=""${DOCKER_IMAGES}""
+
 
 # Clone ------------------------------------------------------------------------
 
@@ -120,17 +96,48 @@ ${ROOT_FOLDER}/webMidiTools:
 # 	done
 
 
-# Build ------------------------------------------------------------------------
+# Build/Push/Pull --------------------------------------------------------------
 
 .PHONY: build
 build: clone ${ROOT_FOLDER}/.dockerignore
-	docker-compose \
-		--file docker-compose.yml \
-		build
-	docker-compose \
-		--file docker-compose.production.yml \
-		build \
-		displaytrigger
+	docker-compose build
+	docker-compose --file docker-compose.production.yml build displaytrigger
+.PHONY: push
+push:
+	docker-compose push
+	docker-compose --file docker-compose.production.yml push displaytrigger
+.PHONY: pull
+pull:
+	docker-compose pull
+	docker-compose --file docker-compose.production.yml pull displaytrigger
+
+
+# Manual Build/Push/Pull -------------------------------------------------------
+# To be depricated?
+
+DOCKER_BASE_IMAGES=\
+	alpine \
+	nginx:alpine \
+	node:alpine \
+	python:alpine \
+
+# Annoyingly these imagenames must be in sync with the subrepos - consider a single point of truth
+DOCKER_BUILD_VERSION=latest
+DOCKER_PACKAGE=superlimitbreak
+DOCKER_IMAGE_DISPLAYTRIGGER=${DOCKER_PACKAGE}/displaytrigger:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION=${DOCKER_PACKAGE}/displaytrigger:production
+DOCKER_IMAGE_MEDIAINFOSERVICE=${DOCKER_PACKAGE}/mediainfoservice:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGE_MEDIATIMELINERENDERER=${DOCKER_PACKAGE}/mediatimelinerenderer:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGE_SUBSCRIPTIONSERVER=${DOCKER_PACKAGE}/subscriptionserver2:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGE_STAGEORCHESTRATION=${DOCKER_PACKAGE}/stageorchestration:${DOCKER_BUILD_VERSION}
+DOCKER_IMAGES=\
+	${DOCKER_IMAGE_SUBSCRIPTIONSERVER} \
+	${DOCKER_IMAGE_MEDIAINFOSERVICE} \
+	${DOCKER_IMAGE_MEDIATIMELINERENDERER} \
+	${DOCKER_IMAGE_STAGEORCHESTRATION} \
+	${DOCKER_IMAGE_DISPLAYTRIGGER} \
+	${DOCKER_IMAGE_DISPLAYTRIGGER_PRODUCTION} \
+
 _build_manual: clone ${ROOT_FOLDER}/.dockerignore
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaInfoService
 	${MAKE} build --directory ${ROOT_FOLDER}/mediaTimelineRenderer
@@ -149,24 +156,25 @@ _build_manual: clone ${ROOT_FOLDER}/.dockerignore
 #	docker-compose build --file docker-compose.yml --file docker-compose.build.yml
 #push:
 # 	docker-compose push --file docker-compose.yml --file docker-compose.build.yml
-
-.PHONY: push
-push:
-	docker-compose push
-	# TODO: docker-compose push prodction?
 _push_manual:
 	# TODO: call sub Makefiles?
 	for DOCKER_IMAGE in ${DOCKER_IMAGES}; do\
 		docker push $$DOCKER_IMAGE ;\
 	done
-
-# Pull Updates -----------------------------------------------------------------
-
-.PHONY: pull
-pull: clone
+_pull_manual_base:
 	for DOCKER_BASE_IMAGE in ${DOCKER_BASE_IMAGES}; do\
 		docker pull $$DOCKER_BASE_IMAGE ;\
 	done
+
+_clean_manual:
+	for DOCKER_IMAGE in ${DOCKER_IMAGES}; do\
+		docker rmi $$DOCKER_IMAGE ;\
+	done
+
+# Pull Repos -------------------------------------------------------------------
+
+.PHONY: pull_repos
+pull_repos: clone
 	for REPO in ${REPOS}; do\
 		echo "Pulling $$REPO" ;\
 		cd ${ROOT_FOLDER}/$$REPO ; git pull ;\
@@ -240,6 +248,4 @@ clean:
 	for REPO in ${REPOS}; do\
 		${MAKE} clean --directory $$REPO ;\
 	done
-	for DOCKER_IMAGE in ${DOCKER_IMAGES}; do\
-		docker rmi $$DOCKER_IMAGE ;\
-	done
+
